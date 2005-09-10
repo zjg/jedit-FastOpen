@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+
+<!--
+     This is a build.xml file for building the FastOpen plugin.
+
+     The 'dist' target compiles the plugin and creates the JAR file.
+     Before running the 'dist' target, you will need to generate the
+     documentation using one of these two targets:
+
+     - 'docs-xalan': Creates documentation using the Xalan XSLT processor
+     - 'docs-xsltproc': Creates documentation using the xsltproc tool
+
+     To use it for building your own plugin, make these changes:
+
+     - Change definition of 'jar.name' to the name of your plugin's JAR file
+     - If necessary, add any dependencies to the 'project.class.path'
+       definition
+     - If necessary, change the list of files in the 'dist' targtet
+     - If necessary, change the 'docs-xalan' and 'docs-xsltproc' targets
+       accordingly.
+-->
+
+<project name="FastOpen" default="dist" basedir=".">
+
+	<property file="../build.properties"/>
+	<property file="build.properties"/>
+
+	<property name="jar.name"  value="${ant.project.name}.jar"/>
+	<property name="version"  value="1.1"/>
+	<property name="srcfile"  value="${ant.project.name}_src_${version}.zip"/>
+
+	<property name="src.dir" value="."/>
+	<property name="build.dir" value="build"/>
+	<property name="install.dir"  value="."/>
+
+	<property name="jedit.install.dir"  value=".."/>
+	<property name="jedit.jars.dir"  value="${jedit.home}/jars"/>
+
+	<path id="project.class.path">
+		<pathelement location="${jedit.jars.dir}/ProjectViewer.jar"/>
+		<pathelement location="${jedit.install.dir}/jedit.jar"/>
+	</path>
+
+
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+	</target>
+
+
+	<target name="compile" depends="init">
+		<javac
+			srcdir="${src.dir}"
+			destdir="${build.dir}"
+			deprecation="on"
+			debug="on"
+			target="1.3"
+			includeJavaRuntime="no"
+			nowarn="true"
+		>
+			<classpath refid="project.class.path"/>
+		</javac>
+	</target>
+
+
+	<target name="dist" depends="compile">
+		<!-- <mkdir dir="${install.dir}"/> -->
+		<jar jarfile="${jedit.jars.dir}/${jar.name}">
+			<fileset dir="${build.dir}"/>
+			<fileset dir="${src.dir}">
+				<include name="actions.xml"/>
+				<include name="dockables.xml"/>
+				<include name="**/*.props"/>
+				<include name="**/*.html"/>
+				<include name="**/*.gif"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="src_dist" depends="init">
+		<zip zipfile="${srcfile}">
+			<fileset dir="${src.dir}">
+				<exclude name="build/**"/>
+				<exclude name="${srcfile}"/>
+				<exclude name="build.properties"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete file="${srcfile}"/>
+		<delete>
+			<fileset dir="." includes="**/*~" defaultexcludes="no"/>
+			<!--fileset dir="." includes="**/*.html" defaultexcludes="no"/-->
+		</delete>
+	</target>
+
+	<!-- Generate tags using 'ctags' program from ctags.sourceforge.net -->
+	<target name="tags">
+		<exec executable="ctags">
+			<arg value="-R" />
+			<arg path="." />
+		</exec>
+	</target>
+</project>
