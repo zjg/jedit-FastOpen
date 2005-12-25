@@ -51,13 +51,32 @@ public class FastOpen extends JPanel implements ActionListener
 		setupFastOpen();
 	}//End of FastOpen constructor
 
-
+	public void fireMouseEvent(final boolean later) {
+		Runnable r = new Runnable() {
+			public void run() {
+				if (later) try {Thread.sleep(1000); } catch (InterruptedException ie) {}
+				MouseEvent me = new MouseEvent(view, MouseEvent.MOUSE_CLICKED, 
+					0, 0, 0, 0, 1, false, MouseEvent.BUTTON1);
+				view.getTextArea().getPainter().dispatchEvent(me);
+			}
+		};
+		if (later) {
+			Thread t = new Thread(r);
+			t.start();
+		}
+		else {
+			r.run();
+		}
+	}
 
 	/**  Shows the Main FastOpen window  */
 	public void showWindow()
 	{
 		if(mainWindow != null)
 		{
+			/* Simulates a mouse click, so that plugins like navigator remember
+			 where we were when we did fastopen and can bring us back */
+			fireMouseEvent(false);
 			/*
 			  if(files.getCurrentProject(view) == null)
 			   {
@@ -84,12 +103,11 @@ public class FastOpen extends JPanel implements ActionListener
 				{
 					//Only one matching file so why show the mainWindow
 					openFile((FastOpenFile)matchingfiles.iterator().next());
-
+					
 					if(lno != -1)
 					{
 						gotoLine(lno);
 					}
-
 					return;
 				}
 
@@ -107,7 +125,7 @@ public class FastOpen extends JPanel implements ActionListener
 			//}
 
 			txtfilename.selectAll();
-			mainWindow.show();
+			mainWindow.setVisible(true);
 		}
 		else
 		{
@@ -403,6 +421,7 @@ public class FastOpen extends JPanel implements ActionListener
 	private Buffer openFile(int matchingfileindex)
 	{
 		return openFile((FastOpenFile)_foundfileslist.get(matchingfileindex));
+		
 	}
 
 	private Buffer openFile(int matchingfileindex, int lineNo)
@@ -459,7 +478,10 @@ public class FastOpen extends JPanel implements ActionListener
 	 */
 	public Buffer openFile(FastOpenFile pf)
 	{
-		return pf.open(this.view);
+		Buffer b = pf.open(this.view);
+		// FIXME: for some reason this event never reaches Navigator.
+		fireMouseEvent(true);
+		return b;
 	}
 
 
@@ -956,7 +978,7 @@ public class FastOpen extends JPanel implements ActionListener
 
 				if(pv != null)
 				{
-					pv.setProject(projectviewer.ProjectManager.getInstance().getProject(newProject));
+					pv.setRootNode(projectviewer.ProjectManager.getInstance().getProject(newProject));
 					mainWindow.toFront();//when PV is updating itself, FO loses focus. Hopefully this call should work in some jdk/platforms if implemented properly by the platform's jdk.
 				}
 

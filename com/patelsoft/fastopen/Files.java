@@ -76,7 +76,7 @@ public class Files
 		if(isPVThere())
 		{
 			//Iterator iter = ((projectviewer.vpt.VPTProject)getCurrentProject(view)).getOpenableNodes().iterator();
-			Iterator iter = (getCurrentProject(view)).getFiles().iterator();
+			Iterator iter = (getCurrentProject(view)).getOpenableNodes().iterator();
 			while(iter.hasNext())
 			{
 				allFiles.add(new FastOpenFile((projectviewer.vpt.VPTFile)iter.next()));
@@ -106,7 +106,7 @@ public class Files
 				if(project != null)
 				{
 					//if(!project.isInProject(buffer[i].getPath()))
-					if(!project.isProjectFile(buffer[i].getPath()))
+					if(!project.isInProject(buffer[i].getPath()))
 					{
 						allFiles.add(new FastOpenFile(buffer[i]));
 					}

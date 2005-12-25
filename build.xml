@@ -37,7 +37,7 @@
 	<property name="jedit.jars.dir"  value="${jedit.home}/jars"/>
 
 	<path id="project.class.path">
-		<pathelement location="${jedit.jars.dir}/ProjectViewer.jar"/>
+		<pathelement location="${install.dir}/ProjectViewer.jar"/>
 		<pathelement location="${jedit.install.dir}/jedit.jar"/>
 	</path>
 
@@ -53,8 +53,9 @@
 			destdir="${build.dir}"
 			deprecation="on"
 			debug="on"
+			source="1.3"
 			target="1.3"
-			includeJavaRuntime="no"
+			includejavaruntime="no"
 			nowarn="true"
 		>
 			<classpath refid="project.class.path"/>
