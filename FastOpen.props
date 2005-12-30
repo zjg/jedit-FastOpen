@@ -1,7 +1,7 @@
 #name=value
 plugin.com.patelsoft.fastopen.FastOpenPlugin.name=Fast Open
 plugin.com.patelsoft.fastopen.FastOpenPlugin.author=Jiger Patel
-plugin.com.patelsoft.fastopen.FastOpenPlugin.version=1.1.1
+plugin.com.patelsoft.fastopen.FastOpenPlugin.version=1.2
 plugin.com.patelsoft.fastopen.FastOpenPlugin.docs=docs/index.html
 
 #external depencies
@@ -15,8 +15,9 @@ fastopen.title=Fast Open
 fastopen.label=Fast Open
 
 #Menu Items Settings
-plugin.com.patelsoft.fastopen.FastOpenPlugin.menu-item=fastopenwindow.show
+plugin.com.patelsoft.fastopen.FastOpenPlugin.menu=fastopenwindow.show fastopen.reindex
 fastopenwindow.show.label=Show Fast Open Window
+fastopen.reindex.label=Reindex
 
 #Option Pane Settings
 plugin.com.patelsoft.fastopen.FastOpenPlugin.option-pane=fastopen
@@ -25,3 +26,5 @@ options.fastopen.code=new com.patelsoft.fastopen.FastOpenPlugin.FastOpenOptionPa
 
 #Default Properties
 fastopen.showrecentfiles=true
+fastopen.indexing.freq=10
+fastopen.indexing.strategy=polling
