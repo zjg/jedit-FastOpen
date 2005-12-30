@@ -7,6 +7,15 @@
 			com.patelsoft.fastopen.FastOpenPlugin.getFastOpenInstance(view).showWindow();
         </CODE>
     </ACTION>
+	<ACTION NAME="fastopen.reindex">
+        <CODE>
+			com.patelsoft.fastopen.FastOpen fo = com.patelsoft.fastopen.FastOpenPlugin.getFastOpenInstance(view);
+			if(fo != null)
+			{
+				fo.reindex();
+			}
+        </CODE>
+    </ACTION>
 </ACTIONS>
 
 
