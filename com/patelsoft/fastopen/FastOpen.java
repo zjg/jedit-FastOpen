@@ -635,7 +635,18 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 
 		int wordStart = TextUtilities.findWordStart(lineText, offset, noWordSep);
 		int wordEnd = TextUtilities.findWordEnd(lineText, offset + 1, noWordSep);
-		return textArea.getText(lineStart + wordStart, wordEnd - wordStart);
+		String filename = textArea.getText(lineStart + wordStart, wordEnd - wordStart);
+
+		/* Get rid of any path info, since we index by filename and not by pathname */
+		int idx = filename.lastIndexOf("/");
+		if (idx > -1) {
+			filename = filename.substring(idx+1);
+		}
+		idx = filename.lastIndexOf("\\");
+		if (idx > -1) {
+			filename = filename.substring(idx+1);
+		}
+		return filename; 
 	}
 
 	/**
