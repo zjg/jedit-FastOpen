@@ -2,6 +2,7 @@ package com.patelsoft.fastopen;
 
 import java.util.*;
 import org.gjt.sp.jedit.*;
+import projectviewer.vpt.VPTNode;
 
 import projectviewer.vpt.VPTProject;
 // import projectviewer.*;
@@ -11,11 +12,9 @@ import projectviewer.vpt.VPTProject;
 public class Files
 {
 	private boolean PVThere;
-	FastOpen fo;
 
-	public Files(FastOpen fo)
+	public Files()
 	{
-		this.fo = fo;
 		//Test if PV is there or else use Buffers as the base.
 		try
 		{
@@ -54,9 +53,33 @@ public class Files
 	{
 		if(isPVThere())
 		{
-			return projectviewer.PVActions.getCurrentProject(view);
+			/* projectviewer.ProjectViewer pv = getCurrentProjectViewer(view);
+
+			if(pv != null)
+			{
+				System.out.println("PV obj exists. returning active project " + pv.getActiveProject(view));
+				return pv.getActiveProject(view);
+			}
+
+				//currPrj = projectviewer.PVActions.getCurrentProject(view);
+			//System.out.println("PV instance does NOT exist. returning last project as per config " + (projectviewer.config.ProjectViewerConfig.getInstance().getLastNode()));
+            System.out.println("PV instance does not exists. returning last project " + projectviewer.config.ProjectViewerConfig.getInstance().getLastNode());
+			//return (VPTProject)projectviewer.config.ProjectViewerConfig.getInstance().getLastNode();
+            VPTNode nodePrj = projectviewer.config.ProjectViewerConfig.getInstance().getLastNode();
+            if(nodePrj instanceof VPTProject)
+            {
+                return (VPTProject)nodePrj;
+            }
+            //return (projectviewer.vpt.VPTProject)projectviewer.ProjectViewer.getActiveNode(view); */
+
+			return projectviewer.ProjectViewer.getActiveProject(view);
 		}
 		return null;
+  		/*if(isPVThere())
+		{
+			return projectviewer.PVActions.getCurrentProject(view);
+		}
+		return null;*/
 	}
 
 
@@ -64,55 +87,116 @@ public class Files
 	{
 		return PVThere;
 	}
+        
+        public boolean isProjectLoaded(String projectName)
+        {
+            return projectviewer.ProjectManager.getInstance().isLoaded(projectName);
+        }
 
 	/**
 	 *  Description of the Method
 	 *
-	 * @param  projectfiles  Description of the Parameter
-	 * @return               Description of the Return Value
 	 */
 	void prjFile2FOFile(View view, Collection allFiles)
 	{
+		System.out.println("Inside prjFile2FOFile");
 		if(isPVThere())
 		{
+                    //Loop until project is loaded
+                    while(!isProjectLoaded(getCurrentProject(view).getName()))
+                    {
+                        try
+                        {
+                            Thread.sleep(5000);
+                        }
+                        catch(InterruptedException e)
+                        {}
+                    }
+			System.out.println("Inside isPVThere");
 			//Iterator iter = ((projectviewer.vpt.VPTProject)getCurrentProject(view)).getOpenableNodes().iterator();
-			Iterator iter = (getCurrentProject(view)).getOpenableNodes().iterator();
-			while(iter.hasNext())
-			{
-				allFiles.add(new FastOpenFile((projectviewer.vpt.VPTFile)iter.next()));
-			}
-		}
-	}
+                        System.out.println("Got project " + getCurrentProject(view));
+						Collection nodes = (getCurrentProject(view)).getOpenableNodes();
+						synchronized(nodes)
+						{
+							Iterator iterPrj = nodes.iterator();
+							while(iterPrj.hasNext())
+							{
+									projectviewer.vpt.VPTFile file = (projectviewer.vpt.VPTFile)iterPrj.next();
+									/*boolean exists = false;
+									Iterator iterAllFiles = allFiles.iterator();
+									while(iterAllFiles.hasNext())
+									{
+											FastOpenFile fofile = (FastOpenFile)iterAllFiles.next();
+											if(fofile.equals(file))
+											{
+													exists = true;
+													break;
+											}
+									}
 
-		/**
+									if(!exists)
+									{*/
+											FastOpenFile fofile = new FastOpenFile(file);
+											boolean added = allFiles.add(fofile);
+											if(!added) //Means hashcode is same but status is different
+											{
+													allFiles.remove(fofile); //Removes the old duplicate class as per FOFile's hashCode impl.
+													allFiles.add(fofile);
+											}
+									/* } */
+							}
+						}//End of Synchronized
+		}
+	}//End of prjFile2FOFile
+
+	/**
 	*  Description of the Method
 	*
-	* @param  project  Description of the Parameter
 	* @param  buffer   Description of the Parameter
-	* @return          Description of the Return Value
 	*/
 	void diffPrjFilesWithOpenBuffers(Buffer buffer[],View view, Collection allFiles)
 	{
+		System.out.println("Inside diffPrjFilesWithOpenBuffers");
 		if(buffer == null || buffer.length == 0)
 		{
 			return;
 		}
 
-		for(int i = 0; i < buffer.length; i++)
+		if(isPVThere())
 		{
-			if(isPVThere())
+			projectviewer.vpt.VPTProject project = getCurrentProject(view);
+			System.out.println("Got curr project in diffPrjFilesWithOpenBuffers " + project);
+			if(project != null)
 			{
-				projectviewer.vpt.VPTProject project = getCurrentProject(view);
-				if(project != null)
+				//if(!project.isInProject(buffer[i].getPath()))
+				for(int i = 0; i < buffer.length; i++)
 				{
-					//if(!project.isInProject(buffer[i].getPath()))
 					if(!project.isInProject(buffer[i].getPath()))
 					{
-						allFiles.add(new FastOpenFile(buffer[i]));
+						boolean exists = false;
+						Iterator iterAllFiles = allFiles.iterator();
+						while(iterAllFiles.hasNext())
+						{
+							FastOpenFile fofile = (FastOpenFile)iterAllFiles.next();
+							if(fofile.equals(buffer[i]))
+							{
+								exists = true;
+								break;
+							}
+						}
+
+						if(!exists)
+						{
+							FastOpenFile fofile = new FastOpenFile(buffer[i]);
+							allFiles.add(fofile);
+						}
 					}
 				}
 			}
-			else
+		}
+		else
+		{
+			for(int i = 0; i < buffer.length; i++)
 			{
 				allFiles.add(new FastOpenFile(buffer[i]));
 			}
@@ -122,11 +206,34 @@ public class Files
 
 	public void bufferEntry2FastOpenFile(List files, Collection allFiles)
 	{
+		System.out.println("Inside bufferEntry2FastOpenFile");
 		Iterator iter = files.iterator();
 		while(iter.hasNext())
 		{
 			BufferHistory.Entry entry = (BufferHistory.Entry)iter.next();
-			allFiles.add(new FastOpenFile(MiscUtilities.getFileName(entry.path),entry.path,false,false));
+			boolean exists = false;
+			Iterator iterAllFiles = allFiles.iterator();
+			while(iterAllFiles.hasNext())
+			{
+				FastOpenFile fofile = (FastOpenFile)iterAllFiles.next();
+				if(fofile.equals(entry))
+				{
+					exists = true;
+					break;
+				}
+			}
+
+			if(!exists)
+			{
+				FastOpenFile fofile = new FastOpenFile(entry);
+				allFiles.add(fofile);
+			}
 		}
 	}
+
+	void getRecentFiles(Collection allFiles)
+	{
+		bufferEntry2FastOpenFile(BufferHistory.getHistory(), allFiles);
+	}
+
 }

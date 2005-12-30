@@ -41,26 +41,37 @@
 You can also color annotate Open files to identify or differentiate between open & not open files. FastOpen can also indicate errors in your search pattern by changing the color of file search pattern to red. to indicate that no files match the criteria or errorneous regexp syntax (0.6+). <br><br>
   Another feature is "Jump to file". You can select any text or keep your cursor on any text in the JEdit textarea(say a Classname) & invoke FastOpen on it. If FastOpen finds a file matching that name it will automatically open that file for you resembling "Jump to" feature. If it does not match any file or matches more than one file then it will show you matching files dialog box. You can enable/disable this feature from Utilities-Global Options-FastOpen and select/deselect "Pattern from selected text" checkbox.
 
-<p>FastOpen 0.8 adds a lot of new features to make even simpler file manipulation. First among them, is the previous patterns drop down for easy re-run of previous search patterns. This is particularly helpful to remember complex or repetative search patterns, instead of typing patterns everytime/everyday. You can cycle between previous search patterns by pressing Ctrl+UP Arrow or Ctrl+DOWN Arrow keys on your keyboard.</p>
+<p>FastOpen adds a lot of new features to make even simpler file manipulation. First among them, is the previous patterns drop down for easy re-run of previous search patterns. This is particularly helpful to remember complex or repetative search patterns, instead of typing patterns everytime/everyday. You can cycle between previous search patterns by pressing Ctrl+UP Arrow or Ctrl+DOWN Arrow keys on your keyboard.</p>
 <p> FastOpen allows you to switch between open files even if they don't belong to the Project, say Log files when working on Web-Applications, which are generally not part of the Project. You can even color code such files from FastOpen preferences in Global Options, to identify such files. Also The 0.7 feature of "Jump to file" feature has now been expanded to "Jump to file" under cursor or you can select a word & Jump to it as usual.</p>
 </p>
-<p>FastOpen 0.9 adds a convenient feature to Open any file + jump to a particular line number. This is globally supported, meaning, this filename:lineno pattern can be typed in or can also be used in conjunction with the "Jump to file" feature.</p>
+<p>FastOpen has a convenient feature to Open any file + jump to a particular line number. This is globally supported, meaning, this filename:lineno pattern can be typed in or can also be used in conjunction with the "Jump to file" feature.</p>
 	<p>This feature is very useful especially when looking at a stacktrace you can simply place your cursor on the file in the stack trace & invoke FastOpen, and FastOpen will open the file on the cursor AND automatically take you to the lineno specified in the exception stack trace. Note that the filename need not be full filename and can also be a regexp patten:lineno for e.g the following are some of the valid ways to use this feature<br>
 
 	1. ListOrderServlet.java:10<br>
 	2. ListOrde*:10
 	</p>
 
-<p>FastOpen 1.0 comes updated with the jEdit 4.2 API to support dynamic loading of the plugin. In case FastOpen is docked on any side, the search pattern textfield now has the default focus(tries to). Starting 1.0 FastOpen adds yet another innovative and handy feature to also allow opening of files that were recently opened. This is very helpful since we may open many files and would want to re-open them and they may or may not belong to project.</p>
+<p>In case FastOpen is docked on any side, the search pattern textfield now has the default focus(tries to). Starting 1.0 FastOpen adds yet another innovative and handy feature to also allow opening of files that were recently opened. This is very helpful since we may open many files and would want to re-open them and they may or may not belong to project.</p>
 
 <a name="introToNewFeatures"></a>
 <h3>Introduction to New Features</h3>
-<p>This release adds an option to the FastOpen options to toggle Recent files search which basically instructs FastOpen whether it should or shouldn't search for files matching the search pattern in Recent Files List.</p>
+<p>Looking at the typical usgae scenario where there is frequent access to files and relatively less jumping around projects. FastOpen has changed its internals to adopt the popular indexing method. Instead of querying the sources(Project Viewer, Open buffers etc) EACH time, it simply pulls the files and maintains an index and only re-polls after a configurable(via Global Options) second timeout. Thus you can configure how frequent you want FastOpen to load the new file list depending on your usage pattern. Users wishing to NOT use the Polling Index Manager can switch to the old behaviour(query each time) by setting &quot;fastopen.indexing.strategy&quot; property to &quot;simple&quot;. To switch back set the property to &quot;polling&quot;.</p>
 
 <a name="releasenotes"></a>
+<h3>Release Notes & Change Log for Version : 1.2 (????)</h3>
+<ol>
+		<li>FastOpen now maintains an Index of files instead of querying the sources each time. An Index Manager thread will update the index in the background from time-to-time(configurable via Global Options). This immensely speeds up FastOpen.</li>
+		<li>File search string entered during the time the Index is being created(generally on first execution of FastOpen), is buffered and is automatically executed when indexing process is completed. So during initial index building esp. of large projects be patient.</li>
+		<li>Incase two files are not open, then the one which is Project file take precedence(If Sorting is enabled).</li>
+		<li>Fixed a rare case of Same file (1 appearing in Project and the other from Recent List before the Project was created) both getting displayed because sources were returning different character case namely ProjectViewer returning c:\directory\myfile.txt and Recent file returning C:\directory\myfile.txt.</li>
+		<li>Fixed a rare NPE case if there was a RegexpException</li>
+		<li>Limited the filename search pattern to ignore multiline selections to avoid mistakenly invoking FastOpen on a large selection and FastOpen having to go and search an invain pattern.</li>
+		<li>Multi-File open ability added.</li>
+		<li>Projects in the Project List dropdown are now sorted in case-insensitive order.</li>
+</ol>
 <h3>Release Notes & Change Log for Version : 1.1 (16th August 2004)</h3>
 <ol>
-		<li>Fixed FastOpen's performance issues cropped up in FastOpen 1.0. The performance has been incresed many-folds by optimizing internal data structures and eliminating unnecessary Structure Copies etc.</li>
+		<li>Fixed FastOpen's performance issues cropped up in FastOpen 1.0. The performance has been increased many-folds by optimizing internal data structures and eliminating unnecessary Structure Copies etc.</li>
 		<li>Added option to toggle inclusion of Recent files in Search set.</li>
 		<li>Cleanup of some old, deprecated FastOpen property names.</li>
 </ol>

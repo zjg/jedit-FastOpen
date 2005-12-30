@@ -2,19 +2,22 @@ package com.patelsoft.fastopen;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.jedit.gui.ColorWellButton;
-import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.util.*;
 
 
 public class FastOpenPlugin extends EditPlugin
 {
 	public final static String NAME = "fastopen";
-	private static Hashtable viewsToFastOpen = new Hashtable(5);
+	static Hashtable viewsToFastOpen = new Hashtable(5);
 
 	public final static String OPEN_FILES_FIRST = "OPEN_FILES_FIRST";
 	public final static String OPEN_FILES_LAST ="OPEN_FILES_LAST";
@@ -34,7 +37,7 @@ public class FastOpenPlugin extends EditPlugin
 		{
 			View v = (View)iter.nextElement();
 			v.removeWindowListener(wa);
-		} 
+		}
 		super.stop();
 	}
 
@@ -89,6 +92,7 @@ public class FastOpenPlugin extends EditPlugin
 		JRadioButton radioOpenFilesFirst,radioOpenFilesLast,radioNoPref;
 		ButtonGroup bg = new ButtonGroup();
 		ColorWellButton btnOpenFilesColor, btnNonPrjFilesColor;
+		JSlider indexingFreq;
 
 		public FastOpenOptionPane()
 		{
@@ -107,6 +111,34 @@ public class FastOpenPlugin extends EditPlugin
 			radioOpenFilesLast = new JRadioButton("Show open files Last");
 			radioNoPref = new JRadioButton("No Preference",true);
 
+			indexingFreq = new JSlider(5,300);//Seconds. 5 sec. to 5 min. anything above this would be useless.
+			indexingFreq.setPaintLabels(true);
+			indexingFreq.setPaintLabels(true);
+			Dictionary tables = new Hashtable();
+			tables.put(new Integer(5),new JLabel("5 sec."));
+			tables.put(new Integer(60),new JLabel("1 min."));
+			tables.put(new Integer(120),new JLabel("2 min."));
+			tables.put(new Integer(180),new JLabel("3 min."));
+			tables.put(new Integer(240),new JLabel("4 min."));
+			tables.put(new Integer(300),new JLabel("5 min."));
+
+			indexingFreq.setLabelTable(tables);
+
+			final JLabel freqVal = new JLabel(indexingFreq.getValue() +"");
+			// Register a change listener
+			indexingFreq.addChangeListener(new ChangeListener(){
+				// This method is called whenever the slider's value is changed
+				public void stateChanged(ChangeEvent evt)
+				{
+					JSlider slider = (JSlider)evt.getSource();
+					if (!slider.getValueIsAdjusting())
+					{
+						// Get new value
+						freqVal.setText(slider.getValue()+" sec.");
+					}
+				}
+			});
+
 			radioOpenFilesFirst.setActionCommand(FastOpenPlugin.OPEN_FILES_FIRST);
 			radioOpenFilesLast.setActionCommand(FastOpenPlugin.OPEN_FILES_LAST);
 			radioNoPref.setActionCommand(FastOpenPlugin.OPEN_FILES_NOPREF);
@@ -117,18 +149,35 @@ public class FastOpenPlugin extends EditPlugin
 			bg.add(radioNoPref);
 
 			JPanel panel = new JPanel(new GridLayout(4,1));
-			JPanel panelChk = new JPanel(new GridLayout(0,4));
+			JPanel panelChk = new JPanel(new GridLayout(0,3));
 			JPanel panelColors = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			JPanel pnlRadios = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			//final JPanel pnlRadios = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			final JPanel pnlRadios = new JPanel(new GridLayout(0,3));
+			pnlRadios.setBorder(new EtchedBorder());
+			JPanel pnlslider = new JPanel(new BorderLayout());
 
-			panelChk.add(chkSort);
 			panelChk.add(chkDontShowOpenFiles);
 			panelChk.add(chkIgnoreCase);
 			panelChk.add(chkPattFromSelectedText);
 			panelChk.add(chkShowRecentFiles);
-
+			panelChk.add(chkSort);
 			panel.add(panelChk);
 
+			chkSort.addItemListener(new ItemListener()
+				{
+					public void itemStateChanged(ItemEvent e)
+					{
+						if(e.getStateChange() == ItemEvent.SELECTED)
+						{
+							enableDisableChildren(pnlRadios, true);
+						}
+						else
+						{
+							enableDisableChildren(pnlRadios, false);
+						}
+					}
+				}
+			);
 			pnlRadios.add(radioOpenFilesFirst);
 			pnlRadios.add(radioOpenFilesLast);
 			pnlRadios.add(radioNoPref);
@@ -147,7 +196,13 @@ public class FastOpenPlugin extends EditPlugin
 			panelColors.add(new JLabel("Non-Project files Foreground :"));
 			panelColors.add(btnNonPrjFilesColor);
 
+
+			pnlslider.add(new JLabel("Indexing frequency "), BorderLayout.WEST);
+			pnlslider.add(indexingFreq, BorderLayout.CENTER);
+			pnlslider.add(freqVal, BorderLayout.EAST);
+
 			panel.add(panelColors);
+			panel.add(pnlslider);
 			addComponent(panel);
 		}
 
@@ -155,6 +210,9 @@ public class FastOpenPlugin extends EditPlugin
 		{
 			super.init();
 			chkSort.setSelected(jEdit.getBooleanProperty("fastopen.sortFiles"));
+
+			enableDisableChildren(radioOpenFilesFirst.getParent(), jEdit.getBooleanProperty("fastopen.sortFiles"));
+
 			chkDontShowOpenFiles.setSelected(jEdit.getBooleanProperty("fastopen.hideOpenFiles"));
 			if(jEdit.getProperty("fastopen.ignorecase") == null)
 			{
@@ -172,6 +230,8 @@ public class FastOpenPlugin extends EditPlugin
 					btn.setSelected(true);
 				}
 			}
+
+			indexingFreq.setValue(jEdit.getIntegerProperty("fastopen.indexing.freq",10));//10 sec. default.
 		}
 
 		public void save()
@@ -186,10 +246,24 @@ public class FastOpenPlugin extends EditPlugin
 				jEdit.setProperty("fastopen.filesOrder",bg.getSelection().getActionCommand());
 				jEdit.setColorProperty("fastopen.openFiles.foregroundcolor",btnOpenFilesColor.getSelectedColor());
 				jEdit.setColorProperty("fastopen.nonprjOpenFiles.foregroundcolor",btnNonPrjFilesColor.getSelectedColor());
+				jEdit.setIntegerProperty("fastopen.indexing.freq",indexingFreq.getValue());
 				FastOpen.openFilesForeground = btnOpenFilesColor.getSelectedColor();
 				FastOpen.nonprjopenFilesForeground = btnNonPrjFilesColor.getSelectedColor();
 			}
 		}//End of save
+
+
+		// enable (or disable) all children of a component
+		void enableDisableChildren(Container container, boolean isEnabled)
+		{
+			// get an array of all the components in this container
+			Component[] components = container.getComponents();
+			// for each element in the container enable/disable it
+			for (int i = 0; i < components.length; i++)
+			{
+				components[i].setEnabled(isEnabled);
+			}
+		}
 	} //End of FastOpenOptionPane
 
 	class FastOpenWindowAdapter extends WindowAdapter
