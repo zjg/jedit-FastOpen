@@ -58,7 +58,7 @@ You can also color annotate Open files to identify or differentiate between open
 <p>Looking at the typical usgae scenario where there is frequent access to files and relatively less jumping around projects. FastOpen has changed its internals to adopt the popular indexing method. Instead of querying the sources(Project Viewer, Open buffers etc) EACH time, it simply pulls the files and maintains an index and only re-polls after a configurable(via Global Options) second timeout. Thus you can configure how frequent you want FastOpen to load the new file list depending on your usage pattern. Users wishing to NOT use the Polling Index Manager can switch to the old behaviour(query each time) by setting &quot;fastopen.indexing.strategy&quot; property to &quot;simple&quot;. To switch back set the property to &quot;polling&quot;.</p>
 
 <a name="releasenotes"></a>
-<h3>Release Notes & Change Log for Version : 1.2 (????)</h3>
+<h3>Release Notes & Change Log for Version : 2.0 (10th January 2006)</h3>
 <ol>
 		<li>FastOpen now maintains an Index of files instead of querying the sources each time. An Index Manager thread will update the index in the background from time-to-time(configurable via Global Options). This immensely speeds up FastOpen.</li>
 		<li>File search string entered during the time the Index is being created(generally on first execution of FastOpen), is buffered and is automatically executed when indexing process is completed. So during initial index building esp. of large projects be patient.</li>
