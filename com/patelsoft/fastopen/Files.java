@@ -87,7 +87,7 @@ public class Files
 	{
 		return PVThere;
 	}
-        
+
         public boolean isProjectLoaded(String projectName)
         {
             return projectviewer.ProjectManager.getInstance().isLoaded(projectName);
@@ -116,8 +116,8 @@ public class Files
 			//Iterator iter = ((projectviewer.vpt.VPTProject)getCurrentProject(view)).getOpenableNodes().iterator();
                         System.out.println("Got project " + getCurrentProject(view));
 						Collection nodes = (getCurrentProject(view)).getOpenableNodes();
-						synchronized(nodes)
-						{
+						//synchronized(nodes)
+						//{
 							Iterator iterPrj = nodes.iterator();
 							while(iterPrj.hasNext())
 							{
@@ -145,7 +145,7 @@ public class Files
 											}
 									/* } */
 							}
-						}//End of Synchronized
+						//}//End of Synchronized
 		}
 	}//End of prjFile2FOFile
 

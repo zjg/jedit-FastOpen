@@ -38,6 +38,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 	private Files files = new Files();
 	private int indexingStatus = 0; // 0 = INDEXING NEVER RAN BEFORE, 1/2 = INDEXING ON/OFF
 	private boolean initialIndexingInProgress;
+	private javax.swing.Timer timer;
 
 
 
@@ -122,7 +123,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 
 			txtfilename.selectAll();
 			mainWindow.validate();
-			mainWindow.show();
+			mainWindow.setVisible(true);
 		}
 		else
 		{
@@ -164,7 +165,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 						{
 							public void run()
 							{
-								findfile();
+								if(timer == null)
+								{
+									startDelayTimer();
+								}
 							}
 						}
 						);
@@ -177,7 +181,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 						{
 							public void run()
 							{
-								findfile();
+								if(timer == null)
+								{
+									startDelayTimer();
+								}
 							}
 						}
 						);
@@ -199,7 +206,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 								{
 									public void run()
 									{
-										findfile();
+										if(timer == null)
+										{
+											startDelayTimer();
+										}
 									}
 								}
 								);
@@ -208,6 +218,15 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 
 					catch(BadLocationException badle)
 					{}
+				}
+
+
+				private void startDelayTimer()
+				{
+					timer = new javax.swing.Timer((int)(jEdit.getDoubleProperty("fastopen.search.delay",2)*1000), new DelaySearchAction());
+					timer.setRepeats(false);
+					timer.start();
+					//System.out.println("Timer started with delay " + timer.getDelay());
 				}
 
 			}
@@ -401,10 +420,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 	/**  Description of the Method */
 	void findfile()
 	{
-		System.out.println("Inside findfile initialIndexingInProgress " + initialIndexingInProgress);
-		String txtToFind = getFilePattern();
+		//System.out.println("Inside findfile initialIndexingInProgress " + initialIndexingInProgress);
 		if(!initialIndexingInProgress)
 		{
+			String txtToFind = getFilePattern();
 			if(txtToFind != null && txtToFind.trim().length() > 0)
 			{
 				//	Log.log(Log.DEBUG, this.getClass(), "Trying to retrieveFiles with text " + txtToFind);
@@ -646,7 +665,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 		if (idx > -1) {
 			filename = filename.substring(idx+1);
 		}
-		return filename; 
+		return filename;
 	}
 
 	/**
@@ -852,26 +871,26 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 				}*/
 				//System.out.println("Completed allfiles for filetoFind " + fileToFind + " " + allfiles);
 
-				long startTime = System.currentTimeMillis();
+				//long startTime = System.currentTimeMillis();
 				Set allfiles = indexManager.getCollectedFiles();
-				long endTime = System.currentTimeMillis();
-				System.out.println("IndexManager.getCollectedFiles took time " + (endTime - startTime)/1000 +" sec");
+				//long endTime = System.currentTimeMillis();
+				//System.out.println("IndexManager.getCollectedFiles took time " + (endTime - startTime)/1000 +" sec");
 				if(allfiles == null || allfiles.size() == 0) //IndexManager still loading.
 				{
 					return null;
 				}
 
-				startTime = System.currentTimeMillis();
+				//startTime = System.currentTimeMillis();
 				List vecPattern = parseFileLnoPattern(fileToFind);
-				endTime = System.currentTimeMillis();
+				//endTime = System.currentTimeMillis();
 
-				System.out.println("parsing Line no pattern took time " + (endTime - startTime)/1000 +" sec");
+				//System.out.println("parsing Line no pattern took time " + (endTime - startTime)/1000 +" sec");
 				if(vecPattern != null)
 				{
 					fileToFind = (String)vecPattern.get(0);
 				}
 
-				long start = System.currentTimeMillis();
+				//long start = System.currentTimeMillis();
 				List foundfileslist = new ArrayList(allfiles.size()); //Initializating Collections is a Performance Optimization since the need for expansion is done away with. Setting foundfileslist's size to max allfiles.size() since thats the max it can go(in case of say regexp '*') anyways. unused elements are as it  is NULLs.
 				try
 				{
@@ -920,10 +939,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 
 					if(jEdit.getBooleanProperty("fastopen.sortFiles"))
 					{
-						start = System.currentTimeMillis();
+						//start = System.currentTimeMillis();
 						Collections.sort(foundfileslist, comparator);
-						long end = System.currentTimeMillis();
-						System.out.println("Time taken to find and sort " + (end-start) + " ms found files " + foundfileslist.size());
+						//long end = System.currentTimeMillis();
+						//System.out.println("Time taken to find and sort " + (end-start) + " ms found files " + foundfileslist.size());
 					}
 
 				}
@@ -943,7 +962,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 	private IndexManager getIndexManager()
 	{
 		String indexManagerType = jEdit.getProperty("fastopen.indexing.strategy");
-		System.out.println("See indexmanager strategy " + indexManagerType);
+		//System.out.println("See indexmanager strategy " + indexManagerType);
 		if(indexManagerType.equals("polling"))
 		{
 			IndexManager idxMgr = new PollingIndexManager(view, files);
@@ -965,25 +984,25 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 
 	public void indexingStarted(IndexManager manager)
 	{
-		System.out.println("Inside indexingStarted");
+		//System.out.println("Inside indexingStarted");
 		if(indexingStatus == 0) //This is the first time Indexing is underway.
 		{
 			initialIndexingInProgress = true;
 		}
 		indexingStatus = 1;
-		System.out.println("Leaving indexingStarted");
+		//System.out.println("Leaving indexingStarted");
 	}
 
 	public void indexingCompleted(IndexManager manager)
 	{
-		System.out.println("Inside indexingCompleted");
+		//System.out.println("Inside indexingCompleted");
 		if(initialIndexingInProgress)
 		{
 			initialIndexingInProgress = false;
 			findfile(); //Try to search for file which the user typed in the name for.
 		}
 		indexingStatus = 2;
-		System.out.println("Leaving indexingCompleted");
+		//System.out.println("Leaving indexingCompleted");
 	}
 
 
@@ -1305,6 +1324,16 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 				return lower1.compareTo(lower2);
 			}
 		}//End of Sorter
+
+
+		class DelaySearchAction implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				findfile();
+				timer = null;
+			}
+		}
 	//Inner Classes Ends.
 
 	public void reindex()

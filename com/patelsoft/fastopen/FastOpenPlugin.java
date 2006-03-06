@@ -93,6 +93,7 @@ public class FastOpenPlugin extends EditPlugin
 		ButtonGroup bg = new ButtonGroup();
 		ColorWellButton btnOpenFilesColor, btnNonPrjFilesColor;
 		JSlider indexingFreq;
+		JSpinner txtdelay;
 
 		public FastOpenOptionPane()
 		{
@@ -110,6 +111,8 @@ public class FastOpenPlugin extends EditPlugin
 			radioOpenFilesFirst = new JRadioButton("Show open files First");
 			radioOpenFilesLast = new JRadioButton("Show open files Last");
 			radioNoPref = new JRadioButton("No Preference",true);
+
+			txtdelay = new JSpinner(new SpinnerNumberModel(jEdit.getDoubleProperty("fastopen.search.delay",2), 0.5,10,0.5));
 
 			indexingFreq = new JSlider(5,300);//Seconds. 5 sec. to 5 min. anything above this would be useless.
 			indexingFreq.setPaintLabels(true);
@@ -148,13 +151,20 @@ public class FastOpenPlugin extends EditPlugin
 			bg.add(radioOpenFilesLast);
 			bg.add(radioNoPref);
 
-			JPanel panel = new JPanel(new GridLayout(4,1));
+			JPanel panel = new JPanel(new GridLayout(5,1));
 			JPanel panelChk = new JPanel(new GridLayout(0,3));
 			JPanel panelColors = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			//final JPanel pnlRadios = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			final JPanel pnlRadios = new JPanel(new GridLayout(0,3));
 			pnlRadios.setBorder(new EtchedBorder());
 			JPanel pnlslider = new JPanel(new BorderLayout());
+
+			JPanel pnldelay = new JPanel();
+			((FlowLayout)pnldelay.getLayout()).setAlignment(FlowLayout.LEFT);
+			JLabel lbldelay = new JLabel("Delay before searching (in seconds)");
+			pnldelay.add(lbldelay);
+			pnldelay.add(txtdelay);
+
 
 			panelChk.add(chkDontShowOpenFiles);
 			panelChk.add(chkIgnoreCase);
@@ -203,11 +213,13 @@ public class FastOpenPlugin extends EditPlugin
 
 			panel.add(panelColors);
 			panel.add(pnlslider);
+			panel.add(pnldelay);
 			addComponent(panel);
 		}
 
 		public void init()
 		{
+			System.out.println("Init called");
 			super.init();
 			chkSort.setSelected(jEdit.getBooleanProperty("fastopen.sortFiles"));
 
@@ -232,6 +244,8 @@ public class FastOpenPlugin extends EditPlugin
 			}
 
 			indexingFreq.setValue(jEdit.getIntegerProperty("fastopen.indexing.freq",10));//10 sec. default.
+
+			txtdelay.setValue(new Double(jEdit.getDoubleProperty("fastopen.search.delay",2)));//1 sec. default.
 		}
 
 		public void save()
@@ -247,9 +261,24 @@ public class FastOpenPlugin extends EditPlugin
 				jEdit.setColorProperty("fastopen.openFiles.foregroundcolor",btnOpenFilesColor.getSelectedColor());
 				jEdit.setColorProperty("fastopen.nonprjOpenFiles.foregroundcolor",btnNonPrjFilesColor.getSelectedColor());
 				jEdit.setIntegerProperty("fastopen.indexing.freq",indexingFreq.getValue());
+
+				double delay = 2.0;
+
+				if(txtdelay.getValue() instanceof Double)
+				{
+					delay = ((Double)txtdelay.getValue()).doubleValue();
+				}
+				else if(txtdelay.getValue() instanceof Integer)
+				{
+					delay = ((Integer)txtdelay.getValue()).doubleValue();
+				}
+
+
+				jEdit.setDoubleProperty("fastopen.search.delay",delay);
 				FastOpen.openFilesForeground = btnOpenFilesColor.getSelectedColor();
 				FastOpen.nonprjopenFilesForeground = btnNonPrjFilesColor.getSelectedColor();
 			}
+
 		}//End of save
 
 
