@@ -100,7 +100,7 @@ public class Files
 	void prjFile2FOFile(View view, Collection allFiles)
 	{
 		System.out.println("Inside prjFile2FOFile");
-		if(isPVThere())
+		if(isPVThere() && atleatOneProject(view))
 		{
                     //Loop until project is loaded
                     while(!isProjectLoaded(getCurrentProject(view).getName()))
@@ -148,6 +148,23 @@ public class Files
 						//}//End of Synchronized
 		}
 	}//End of prjFile2FOFile
+	
+	
+	/**
+	*	Checks if PV has atleast one project created.
+	*/
+	private boolean atleatOneProject(View view)
+	{
+		if(isPVThere())
+		{
+			if(getCurrentProject(view) != null)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	/**
 	*  Description of the Method
