@@ -1,9 +1,11 @@
 package com.patelsoft.fastopen;
 
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +15,8 @@ import javax.swing.event.*;
 import javax.swing.text.BadLocationException;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.jedit.gui.DefaultFocusComponent;
+import org.gjt.sp.jedit.gui.DockableWindowManager;
+import org.gjt.sp.jedit.gui.FloatingWindowContainer;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.*;
@@ -136,16 +140,9 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**  Closes the FastOpen window */
 	public void closeMainWindow()
-	{
-		if(mainWindow != null)
-		{
-			mainWindow.setVisible(false);
-			//allfiles=null;
-		}
-		else
-		{
-			Log.log(Log.ERROR, this.getClass(), "Main Window is null. Who did this?? Can't close mainWindow");
-		}
+	{		
+		DockableWindowManager dwm = jEdit.getActiveView().getDockableWindowManager();
+		dwm.hideDockableWindow("fastopen");
 	}
 
 
@@ -155,7 +152,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		setLayout(new BorderLayout());
 		//txtfilename = new FastOpenTextField(20);
 		txtfilename = new FastOpenTextField("fastopen.patterns", false, true);
-		this.setNextFocusableComponent(txtfilename);
+//		this.setNextFocusableComponent(txtfilename);
 		txtfilename.addActionListener(this);
 		txtfilename.getDocument().addDocumentListener(
 			new DocumentListener()
@@ -321,17 +318,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			}
 
 		);
-		ActionListener escapeAction =
-			new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					closeMainWindow();
-				}
-			};
+		
+		// Add escape-key event handling to widgets
+		KeyHandler keyHandler = new KeyHandler();
+		addKeyListener(keyHandler);
+		txtfilename.addKeyListener(keyHandler);
+		mainWindow.addKeyListener(keyHandler);
 
-		KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-		mainWindow.getRootPane().registerKeyboardAction(escapeAction, escapeKeyStroke, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	}//End of setupFastOpen
 
 
@@ -1346,6 +1339,18 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		txtfilename.requestFocus();
 	}
-
+	
+	class KeyHandler extends KeyAdapter
+	{
+		public void keyPressed(KeyEvent evt)
+		{
+			if (evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+			{
+				closeMainWindow();
+				evt.consume();
+			}
+		}
+	}
+	
 }
 
