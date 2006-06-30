@@ -12,13 +12,14 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.BadLocationException;
 import org.gjt.sp.jedit.*;
+import org.gjt.sp.jedit.gui.DefaultFocusComponent;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.*;
 import gnu.regexp.*;
 
 
-public class FastOpen extends JPanel implements ActionListener, IndexListener
+public class FastOpen extends JPanel implements ActionListener, IndexListener, DefaultFocusComponent
 {
 	private final String TITLE = "Fast Open " + jEdit.getProperty("plugin.com.patelsoft.fastopen.FastOpenPlugin.version");
 	View view;
@@ -1339,6 +1340,11 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener
 	public void reindex()
 	{
 		indexManager.suggestReindex();
+	}
+
+	public void focusOnDefaultComponent()
+	{
+		txtfilename.requestFocus();
 	}
 
 }
