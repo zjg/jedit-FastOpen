@@ -6,6 +6,6 @@
 
 <DOCKABLES>
 	<DOCKABLE NAME="fastopen">
-	return	com.patelsoft.fastopen.FastOpenPlugin.getFastOpenInstance(view).showWindow();
+	com.patelsoft.fastopen.FastOpenPlugin.getFastOpenInstance(view);
 	</DOCKABLE>
 </DOCKABLES>

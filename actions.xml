@@ -2,12 +2,6 @@
 <!DOCTYPE ACTIONS SYSTEM "actions.dtd">
 
 <ACTIONS>
-
-    <ACTION NAME="fastopenwindow.show">
-        <CODE>
-			com.patelsoft.fastopen.FastOpenPlugin.getFastOpenInstance(view).showWindow();
-        </CODE>
-    </ACTION>
 	<ACTION NAME="fastopen.reindex">
         <CODE>
 			com.patelsoft.fastopen.FastOpen fo = com.patelsoft.fastopen.FastOpenPlugin.getFastOpenInstance(view);

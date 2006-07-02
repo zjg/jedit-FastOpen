@@ -61,9 +61,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		indexManager = getIndexManager();
 		setupFastOpen();
 	}//End of FastOpen constructor
-
-	/**  Shows the Main FastOpen window  */
-	public FastOpen showWindow()
+    /**
+    This method gets called whenever our component gets focus. 
+    */
+	public void focusOnDefaultComponent()
 	{
 		if(jEdit.getBooleanProperty("fastopen.patternFromSelectedText"))
 			{
@@ -94,7 +95,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 								gotoLine(lno);
 							}
 							closeMainWindow();									
-							return this;
+							return;
 						}
 
 						txtfilename.setText((txtSelection == null?null:txtSelection.trim()));
@@ -111,9 +112,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				loadProjectsInCombo();
 			}
 			//}
+            txtfilename.requestFocus();
 
 			txtfilename.selectAll();
-		return this;
+		return;
 	}
 
 
@@ -1320,10 +1322,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		indexManager.suggestReindex();
 	}
 
-	public void focusOnDefaultComponent()
-	{
-		txtfilename.requestFocus();
-	}
 	
 	class KeyHandler extends KeyAdapter
 	{
