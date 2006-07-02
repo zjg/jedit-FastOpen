@@ -16,7 +16,7 @@ fastopen.label=Fast Open
 
 #Menu Items Settings
 plugin.com.patelsoft.fastopen.FastOpenPlugin.menu=fastopen fastopen.reindex
-# fastopenwindow.show.label=Show Fast Open Window
+fastopenwindow.show.label=Show Fast Open Window
 fastopen.reindex.label=Reindex
 
 #Option Pane Settings

@@ -63,18 +63,9 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	}//End of FastOpen constructor
 
 	/**  Shows the Main FastOpen window  */
-	public void showWindow()
+	public FastOpen showWindow()
 	{
-		if(mainWindow != null)
-		{
-			/*
-			  if(files.getCurrentProject(view) == null)
-			   {
-				JOptionPane.showMessageDialog(view, "No Project currently Active.Please select some project from the ProjectViewer(except \"All Projects\") to get the FastOpen window", TITLE, JOptionPane.INFORMATION_MESSAGE);
-				return;
-			      }
-			   */
-			if(jEdit.getBooleanProperty("fastopen.patternFromSelectedText"))
+		if(jEdit.getBooleanProperty("fastopen.patternFromSelectedText"))
 			{
 				String txtSelection = getFileAtCaret();
 				int lno = -1;
@@ -97,13 +88,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 						{
 							//Only one matching file so why show the mainWindow
 							openFile((FastOpenFile)matchingfiles[0]);
-
+							
 							if(lno != -1)
 							{
 								gotoLine(lno);
 							}
-
-							return;
+							closeMainWindow();
+							return this;
 						}
 
 						txtfilename.setText((txtSelection == null?null:txtSelection.trim()));
@@ -115,11 +106,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 					}
 				}
 			}
-
-			GUIUtilities.loadGeometry(mainWindow, "fastopen.window");
-
-			//if(projectCombo.getItemCount() == 0)// Prevents loading of projects in project combo
-			//{
 			if(files.isPVThere())
 			{
 				loadProjectsInCombo();
@@ -127,14 +113,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			//}
 
 			txtfilename.selectAll();
-			mainWindow.validate();
-			mainWindow.setVisible(true);
-		}
-		else
-		{
-			// log that mainWindow is null.
-			Log.log(Log.ERROR, this.getClass(), "MainWindow of FastOpen is null???. Who did this??");
-		}
+		return this;
 	}
 
 
@@ -297,6 +276,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		this.add(scroller, BorderLayout.CENTER);
 
 		//createMainWindow
+		/*
 		mainWindow = new JDialog(view, this.TITLE, false);
 		mainWindow.setSize(554, 182);//Default size for new FastOpen installation.
 		mainWindow.addNotify();
@@ -318,12 +298,12 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			}
 
 		);
-		
+		*/
 		// Add escape-key event handling to widgets
 		KeyHandler keyHandler = new KeyHandler();
 		addKeyListener(keyHandler);
 		txtfilename.addKeyListener(keyHandler);
-		mainWindow.addKeyListener(keyHandler);
+//		mainWindow.addKeyListener(keyHandler);
 
 	}//End of setupFastOpen
 
