@@ -93,7 +93,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 							{
 								gotoLine(lno);
 							}
-							closeMainWindow();
+							closeMainWindow();									
 							return this;
 						}
 
@@ -120,8 +120,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	/**  Closes the FastOpen window */
 	public void closeMainWindow()
 	{		
-		DockableWindowManager dwm = jEdit.getActiveView().getDockableWindowManager();
-		dwm.hideDockableWindow("fastopen");
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				DockableWindowManager dwm = jEdit.getActiveView().getDockableWindowManager();
+				dwm.hideDockableWindow("fastopen");					
+			}
+		});
+		
 	}
 
 
