@@ -32,15 +32,17 @@ Take a look at the <a href="#introToNewFeatures">Introduction to New Features</a
 
 <h3 id="Introduction">Introduction</h3>
 <p>
-        FastOpen is a plugin for simple to advance users. You can quickly open files from your project irrespective of their position in the directory structure. A file might be in
-        10 (or n number of) directory below your project root but for a FastOpen user it is as simple as typing in the first few characters of that file. For advance users, FastOpen (0.6+) also supports
+        FastOpen is a plugin for simple to advanced users. You can quickly open files from your project irrespective of their position in the directory structure. A file might be in
+        10 (or n number of) directory below your project root but for a FastOpen user it is as simple as typing in the first few characters of that file. For advanced users, FastOpen (0.6+) also supports
         Full Perl5 compatible regexp. for searching files matching some pattern (like find me all - *.html or *.txt) files or as complicated as all XML files who has a word TEST in them.
         </p>
 <br>
 <h3 id="usage">Usage</h3>
 <p>
-        FastOpen can be used with or without ProjectViewer being docked on any sides. But you must have atleast one project in ProjectViewer (if you are using ProjectViewer). You can also switch between projects using just FastOpen. To search for a file in your project, simply type in the first few characters of the filename(including regexp patterns if so desired). FastOpen will list down matching files in the list below. You can open the file by double clicking or selecting it from keyboard.
-		You can map FastOpen to some favourite shortcut key for really fast access to your project files.
+        FastOpen can be used with or without ProjectViewer being docked, but you must have atleast one project currently loaded and selected in ProjectViewer (if you are using ProjectViewer). You can also switch between projects using just FastOpen. To search for a file in your project, simply type in the first few characters of the filename(including regexp patterns if so desired). FastOpen will list down matching files in the list below. You can open the file by double clicking or selecting it from keyboard.
+        </p>
+        <p> 
+		You can map FastOpen to a favourite shortcut key for really fast, mouse-free access to your project files.
 </p>
 
 <p>FastOpen is fully customisable from the Utilities-Global Options. You can configure things like Sort Files, Keep Open files in the end or at the begining of the list of matching files, or even "Don't show me already open files"... etc.
@@ -48,6 +50,7 @@ You can also color annotate Open files to identify or differentiate between open
 <p>
   Another feature is "Jump to file". You can select any text or keep your cursor on any text in the JEdit textarea(say a Classname) & invoke FastOpen on it. If FastOpen finds a file matching that name it will automatically open that file for you resembling "Jump to" feature. If it does not match any file or matches more than one file then it will show you matching files dialog box. You can enable/disable this feature from Utilities-Global Options-FastOpen and select/deselect "Pattern from selected text" checkbox.
 </p>
+
 <p>FastOpen adds a lot of new features to make even simpler file manipulation. First among them, is the previous patterns drop down for easy re-run of previous search patterns. This is particularly helpful to remember complex or repetative search patterns, instead of typing patterns everytime/everyday. You can cycle between previous search patterns by pressing Ctrl+UP Arrow or Ctrl+DOWN Arrow keys on your keyboard.</p>
 <p> FastOpen allows you to switch between open files even if they don't belong to the Project, say Log files when working on Web-Applications, which are generally not part of the Project. You can even color code such files from FastOpen preferences in Global Options, to identify such files. Also The 0.7 feature of "Jump to file" feature has now been expanded to "Jump to file" under cursor or you can select a word & Jump to it as usual.</p>
 
@@ -59,19 +62,20 @@ You can also color annotate Open files to identify or differentiate between open
 <li> ListOrde*:10 </li>
 </ol>
 
-<p>In case FastOpen is docked on any side, the search pattern textfield now has the default focus(tries to). Starting 1.0 FastOpen adds yet another innovative and handy feature to also allow opening of files that were recently opened. This is very helpful since we may open many files and would want to re-open them and they may or may not belong to project.</p>
+<p>Fastopen works equally well as a floater or a dockable. When it is activated, the search pattern textfield has the default focus. Starting with 1.0, FastOpen adds yet another innovative and handy feature to also allow opening of files that were recently opened. This is very helpful since we frequently return to previously opened files, regardless of the current proejct.
+</p>
 
 <a name="introToNewFeatures"></a>
 <h3 id="newfeatures">Introduction to New Features</h3>
 
-<p>Looking at the typical usage scenario where there is frequent access to files and relatively less jumping around projects. FastOpen has changed its internals to adopt the popular indexing method. Instead of querying the sources(Project Viewer, Open buffers etc) EACH time, it simply pulls the files and maintains an index and only re-polls after a configurable(via Global Options) second timeout. Thus you can configure how frequent you want FastOpen to load the new file list depending on your usage pattern. Users wishing to NOT use the Polling Index Manager can switch to the old behaviour(query each time) by setting &quot;fastopen.indexing.strategy&quot; property to &quot;simple&quot;. To switch back set the property to &quot;polling&quot;.</p>
+<p>In one typical usage scenario, there is frequent access to files and relatively less jumping around projects. FastOpen has changed its internals to adopt the popular indexing method. Instead of querying the sources(Project Viewer, Open buffers etc) EACH time, it simply pulls the files and maintains an index and only re-polls after a configurable(via Global Options) second timeout. Thus you can configure how frequent you want FastOpen to load the new file list depending on your usage pattern. Users wishing to NOT use the Polling Index Manager can switch to the old behaviour(query each time) by setting &quot;fastopen.indexing.strategy&quot; property to &quot;simple&quot;. To switch back set the property to &quot;polling&quot;.</p>
 
 <a name="releasenotes"></a>
 <h3 id="version2.1">Release Notes & Change Log for Version : 2.1 (????)</h3>
 <ol>
 	    <li>Made textarea the "default focus component". (Alan Ezust)</li>
         <li> ESC now dismisses dockable. (Alan Ezust) </li>
-        <li> Got rid of redundant "fastopen window". </li>
+        <li> Got rid of redundant "fastopen window", and fixed the dockable so that it works like the dialog used to. (Alan Ezust) </li>
 		<li>Added "delay before searching" (in global options) to enable delay before FastOpen starts searching the index. This improves the performance drastically preventing event firing and thread contentions on every key press since the text to find would now be batched.</li>
 		<li>Fixed NPE if ProjectViewer is present but contains no projects.</li>
 </ol>
