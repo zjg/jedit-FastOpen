@@ -11,7 +11,7 @@ plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.1=jedit 04.02.99.00
 
 
 plugin.com.patelsoft.fastopen.FastOpenPlugin.activate=defer
-fastopen.title=Fast Open
+fastopen.title=Fast Open ${plugin.com.patelsoft.fastopen.FastOpenPlugin.version} 
 fastopen.label=Fast Open
 
 #Menu Items Settings

@@ -25,7 +25,11 @@ import gnu.regexp.*;
 
 public class FastOpen extends JPanel implements ActionListener, IndexListener, DefaultFocusComponent
 {
-	private final String TITLE = "Fast Open " + jEdit.getProperty("plugin.com.patelsoft.fastopen.FastOpenPlugin.version");
+	// dockable name
+	public static final String NAME = "fastopen";
+	// Version for title
+	private final String TITLE = "v" +jEdit.getProperty("plugin.com.patelsoft.fastopen.FastOpenPlugin.version");
+
 	View view;
 	JTextField txtfilename;
 	JList  jlist;
@@ -58,6 +62,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		this.view = view;
 		noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
+		DockableWindowManager dwm = view.getDockableWindowManager();
+		dwm.setDockableTitle(NAME, TITLE);
 		indexManager = getIndexManager();
 		setupFastOpen();
 	}//End of FastOpen constructor
@@ -283,6 +289,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		this.add(scroller, BorderLayout.CENTER);
 
 		//createMainWindow
+		
 		/*
 		mainWindow = new JDialog(view, this.TITLE, false);
 		mainWindow.setSize(554, 182);//Default size for new FastOpen installation.
