@@ -11,6 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.jedit.gui.ColorWellButton;
+import org.gjt.sp.jedit.gui.DockableWindowManager;
 import org.gjt.sp.util.*;
 
 
@@ -43,7 +44,11 @@ public class FastOpenPlugin extends EditPlugin
 
 	public static FastOpen getFastOpenInstance(View view)
 	{
-		FastOpen fopen = (FastOpen)viewsToFastOpen.get(view);
+		DockableWindowManager dwm = view.getDockableWindowManager();
+		FastOpen fopen = null;
+		if (dwm != null) {
+			fopen = (FastOpen) dwm.getDockable("fastopen");
+		}
 		if (fopen == null)
 		{
 			fopen = new FastOpen(view);
