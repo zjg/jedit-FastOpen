@@ -1,9 +1,8 @@
 package com.patelsoft.fastopen;
 
+import org.gjt.sp.jedit.gui.HistoryModel;
 import org.gjt.sp.jedit.gui.HistoryTextField;
 import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
-import javax.swing.JComponent;
 
 public class FastOpenTextField extends HistoryTextField
 {
@@ -20,44 +19,13 @@ public class FastOpenTextField extends HistoryTextField
 	public FastOpenTextField(String name, boolean instantPopups, boolean enterAddsToHistory)
 	{
 		super(name,instantPopups, enterAddsToHistory);
+		HistoryModel model = getModel();
+		int s = model.size();
+		
+		setSelectAllOnFocus();
+		String lastEntry = model.get(0).toString();
+		setText(lastEntry);
 	}
 
-	protected void processKeyEvent(KeyEvent evt)
-	{
-		if(isEnabled())
-		{
-			if(evt.getID() == KeyEvent.KEY_PRESSED)
-			{
-				if(evt.getKeyCode() == KeyEvent.VK_UP && evt.isControlDown())
-				{
-					super.processKeyEvent(evt);
-					return; //Can't call evt.consume() & continue the flow because HistoryTextField does not check for isConsumed() & we will see funny results of double action execution.
-				}
-				else if(evt.getKeyCode() == KeyEvent.VK_DOWN && evt.isControlDown())
-				{
-					super.processKeyEvent(evt);
-					return;
-				}
-				else if(evt.getKeyCode() == KeyEvent.VK_TAB && evt.isControlDown())
-				{
-					super.processKeyEvent(evt);
-					return;
-				}
-				else if(evt.getKeyCode() == KeyEvent.VK_UP && evt.getModifiers() == 0)
-				{
-					//Log.log(Log.DEBUG,this.getClass(),"Inside !consumed " +" Key pressed? "+((evt.getID() == KeyEvent.KEY_PRESSED)));
-					processKeyBinding(KeyStroke.getKeyStroke("UP"),evt,JComponent.WHEN_IN_FOCUSED_WINDOW,(evt.getID() == KeyEvent.KEY_PRESSED));
-					return;
-				}
-				else if(evt.getKeyCode() == KeyEvent.VK_DOWN && evt.getModifiers() == 0)
-				{
-					//Log.log(Log.DEBUG,this.getClass(),"Inside !consumed " +" Key pressed? "+((evt.getID() == KeyEvent.KEY_PRESSED)));
-					processKeyBinding(KeyStroke.getKeyStroke("DOWN"),evt,JComponent.WHEN_IN_FOCUSED_WINDOW,(evt.getID() == KeyEvent.KEY_PRESSED));
-					return;
-				}
-			}
-			super.processKeyEvent(evt);
-		}
-	}//End of processKeyEvent
 }
 
