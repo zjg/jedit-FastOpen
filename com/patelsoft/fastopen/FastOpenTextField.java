@@ -55,11 +55,13 @@ public class FastOpenTextField extends HistoryTextField
 				{
 					//Log.log(Log.DEBUG,this.getClass(),"Inside !consumed " +" Key pressed? "+((evt.getID() == KeyEvent.KEY_PRESSED)));
 					processKeyBinding(KeyStroke.getKeyStroke("UP"),evt,JComponent.WHEN_IN_FOCUSED_WINDOW,(evt.getID() == KeyEvent.KEY_PRESSED));
+					evt.consume();
 					return;
 				}
 				else if(evt.getKeyCode() == KeyEvent.VK_DOWN && evt.getModifiers() == 0)
 				{
 					//Log.log(Log.DEBUG,this.getClass(),"Inside !consumed " +" Key pressed? "+((evt.getID() == KeyEvent.KEY_PRESSED)));
+					evt.consume();
 					processKeyBinding(KeyStroke.getKeyStroke("DOWN"),evt,JComponent.WHEN_IN_FOCUSED_WINDOW,(evt.getID() == KeyEvent.KEY_PRESSED));
 					return;
 				}
