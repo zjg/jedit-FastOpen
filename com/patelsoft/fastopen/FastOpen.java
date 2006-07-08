@@ -378,6 +378,9 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 
 		);
 		mainWindow.setVisible(true);
+		focusOnDefaultComponent();
+		mainWindow.addFocusListener(new FastOpenFocusListener());
+
 		return mainWindow;
 	}
 
@@ -1440,6 +1443,18 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		indexManager.suggestReindex();
 	}
 
+	class FastOpenFocusListener implements FocusListener {
+
+		public void focusGained(FocusEvent e)
+		{
+			focusOnDefaultComponent();
+			
+		}
+
+		public void focusLost(FocusEvent e)
+		{}
+	}
+	
 	class KeyHandler extends KeyAdapter
 	{
 		public void keyPressed(KeyEvent evt)
