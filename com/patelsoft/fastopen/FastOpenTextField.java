@@ -22,12 +22,8 @@ public class FastOpenTextField extends HistoryTextField
 	public FastOpenTextField(String name, boolean instantPopups, boolean enterAddsToHistory)
 	{
 		super(name,instantPopups, enterAddsToHistory);
-		HistoryModel model = getModel();
-		int s = model.size();
-		
 		setSelectAllOnFocus();
-		String lastEntry = model.get(0).toString();
-		setText(lastEntry);
+
 	}
 
 	protected void processKeyEvent(KeyEvent evt)

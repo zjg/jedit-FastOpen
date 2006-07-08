@@ -31,6 +31,7 @@ import org.gjt.sp.jedit.View;
 import org.gjt.sp.jedit.jEdit;
 import org.gjt.sp.jedit.gui.DefaultFocusComponent;
 import org.gjt.sp.jedit.gui.DockableWindowManager;
+import org.gjt.sp.jedit.gui.HistoryModel;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.Log;
@@ -47,7 +48,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 
 	View view;
 
-	JTextField txtfilename;
+	FastOpenTextField txtfilename;
 
 	JList jlist;
 
@@ -145,6 +146,11 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 					txtfilename.setText("");
 				}
 			}
+		}
+		else {
+			HistoryModel model = txtfilename.getModel();
+			String lastEntry = model.get(0).toString();
+			txtfilename.setText(lastEntry);
 		}
 		if (files.isPVThere())
 		{
