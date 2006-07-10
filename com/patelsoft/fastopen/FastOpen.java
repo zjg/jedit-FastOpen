@@ -91,6 +91,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	 */
 	public FastOpen(View view)
 	{
+		//System.out.println("Creating NEW Instance of FO");
 		this.view = view;
 		noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
 		DockableWindowManager dwm = view.getDockableWindowManager();
@@ -587,8 +588,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	{
 		try
 		{
-			return txtfilename.getDocument().getText(0,
-				txtfilename.getDocument().getLength());
+			return txtfilename.getDocument().getText(0,txtfilename.getDocument().getLength());
 		}
 
 		catch (BadLocationException e)
@@ -1015,8 +1015,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	private IndexManager getIndexManager()
 	{
 		String indexManagerType = jEdit.getProperty("fastopen.indexing.strategy");
-		// System.out.println("See indexmanager strategy " +
-		// indexManagerType);
+		//System.out.println("See indexmanager strategy " + indexManagerType);
 		if (indexManagerType.equals("polling"))
 		{
 			IndexManager idxMgr = new PollingIndexManager(view, files);

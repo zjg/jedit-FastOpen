@@ -44,11 +44,20 @@ public class FastOpenPlugin extends EditPlugin
 
 	public static FastOpen getFastOpenInstance(View view)
 	{
-		DockableWindowManager dwm = view.getDockableWindowManager();
+		/*DockableWindowManager dwm = view.getDockableWindowManager();
 		FastOpen fopen = null;
 		if (dwm != null) {
 			fopen = (FastOpen) dwm.getDockable("fastopen");
 		}
+		if (fopen == null)
+		{
+			fopen = new FastOpen(view);
+			viewsToFastOpen.put(view,fopen);
+			view.addWindowListener(wa);
+		}*/
+		
+		/*The above code should not be used. It creates multiple FastOpen objects per invocation of FO window. The correct way is to lookup viewsToFastOpen map and use it as done below.*/
+		FastOpen fopen = (FastOpen)viewsToFastOpen.get(view);
 		if (fopen == null)
 		{
 			fopen = new FastOpen(view);
