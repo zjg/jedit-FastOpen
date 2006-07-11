@@ -76,8 +76,9 @@ You can also color annotate Open files to identify or differentiate between open
 	    <li>Made textarea the "default focus component". (Alan Ezust)</li>
         <li> ESC now dismisses dockable. (Alan Ezust) </li>
         <li> Got rid of redundant "fastopen window", and fixed the dockable so that it works like the dialog used to. (Alan Ezust) </li>
-		<li>Added "delay before searching" (in global options) to enable delay before FastOpen starts searching the index. This improves the performance drastically preventing event firing and thread contentions on every key press since the text to find would now be batched.</li>
-		<li>Fixed NPE if ProjectViewer is present but contains no projects.</li>
+	<li>Added "delay before searching" (in global options) to enable delay before FastOpen starts searching the index. This improves the performance drastically preventing event firing and thread contentions on every key press since the text to find would now be batched.</li>
+	<li>Fixed NPE if ProjectViewer is present but contains no projects.</li>
+	<li>Refactored FastOpen to use java.util.regex instead of gnu regexp fixing bug 1517598.</li>
 </ol>
 
 <h3 id="version2.0">Release Notes & Change Log for Version : 2.0 (10th January 2006)</h3>

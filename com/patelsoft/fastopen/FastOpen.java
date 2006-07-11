@@ -1,10 +1,6 @@
 package com.patelsoft.fastopen;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-import gnu.regexp.REMatch;
-import gnu.regexp.UncheckedRE;
-
+import java.util.regex.*;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -61,7 +57,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	public static Color nonprjopenFilesForeground = jEdit.getColorProperty(
 		"fastopen.nonprjOpenFiles.foregroundcolor", Color.green.darker());
 
-	private final RE reLineNo = new UncheckedRE("(.*):([0-9]+)");
+	private final Pattern reLineNo = Pattern.compile("(.*):([0-9]+)");
 
 	private IndexManager indexManager;
 
@@ -729,14 +725,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	 */
 	List parseFileLnoPattern(String txtSelection)
 	{
-		if ((txtSelection != null && txtSelection.trim().length() != 0)
-			&& reLineNo.isMatch(txtSelection))
+		Matcher matcher = reLineNo.matcher(txtSelection);
+		
+		if ((txtSelection != null && txtSelection.trim().length() != 0)	&& matcher.matches())
 		{
-			REMatch match = reLineNo.getMatch(txtSelection);
-
 			List vecReturn = new ArrayList(2);
-			vecReturn.add(0, match.toString(1));
-			vecReturn.add(1, Integer.valueOf(match.toString(2)));
+			vecReturn.add(0, matcher.group(1));
+			vecReturn.add(1, Integer.valueOf(matcher.group(2)));
 			return vecReturn;
 		}
 
@@ -916,18 +911,14 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 			 the  max it can go(in case of say regexp '*') anyways.
 			 unused elements are as it is NULLs. */
 			
-			try
-			{
-				RE re = null;
-
+				Pattern re = null;
 				if (jEdit.getBooleanProperty("fastopen.ignorecase"))
 				{
-					re = new RE(MiscUtilities.globToRE("^" + fileToFind),
-						RE.REG_ICASE);
+					re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind),Pattern.CASE_INSENSITIVE);
 				}
 				else
 				{
-					re = new RE(MiscUtilities.globToRE("^" + fileToFind));
+					re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind));
 				}
 
 				// start = System.currentTimeMillis();
@@ -952,7 +943,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 						continue;
 					}
 
-					if (re.getMatch(file.getName()) != null)
+					if (re.matcher(file.getName()).find())
 					{
 						// System.out.println("Duplicate
 						// file exists for file "+ file
@@ -983,16 +974,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 					// found files " +
 					// foundfileslist.size());
 				}
-
-			}
-			catch (REException e)
-			{
-				txtfilename.setForeground(Color.red);
-				return new FastOpenFile[0];// To avoid
-								// caller to
-								// having check
-								// NPE
-			}
 			return (FastOpenFile[]) foundfileslist
 				.toArray(new FastOpenFile[foundfileslist.size()]);
 		}
