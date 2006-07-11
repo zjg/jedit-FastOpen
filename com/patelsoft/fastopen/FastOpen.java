@@ -46,35 +46,29 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	private final String VERSION = "v"
 		+ jEdit.getProperty("plugin.com.patelsoft.fastopen.FastOpenPlugin.version");
 
-	View view;
-
-	FastOpenTextField txtfilename;
-
-	JList jlist;
+	private final View view;
+	private FastOpenTextField txtfilename;
+	private JList jlist;
 
 	// List _foundfileslist;
-	JDialog mainWindow = null;
-
-	JComboBox projectCombo;
-
-	ProjectSwitchListener vListener;
-
-	Comparator comparator = new FastOpenComparator();
-
+	private JDialog mainWindow = null;
+	private JComboBox projectCombo;
+	private ProjectSwitchListener vListener;
+	private final Comparator comparator = new FastOpenComparator();
 	public static Color openFilesForeground = jEdit.getColorProperty(
 		"fastopen.openFiles.foregroundcolor", Color.black);
 
 	public static Color nonprjopenFilesForeground = jEdit.getColorProperty(
 		"fastopen.nonprjOpenFiles.foregroundcolor", Color.green.darker());
 
-	final RE reLineNo = new UncheckedRE("(.*):([0-9]+)");
+	private final RE reLineNo = new UncheckedRE("(.*):([0-9]+)");
 
 	private IndexManager indexManager;
 
 	// Set allfiles = new HashSet(1); //Just to avoid NPE
 	private final String noWordSep;
 
-	private Files files = new Files();
+	private final Files files = new Files();
 
 	private int indexingStatus = 0; /* 0 = INDEXING NEVER RAN BEFORE, 1/2 =
 					 INDEXING ON/OFF */
@@ -92,6 +86,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	public FastOpen(View view)
 	{
 		//System.out.println("Creating NEW Instance of FO");
+		super();
 		this.view = view;
 		noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
 		DockableWindowManager dwm = view.getDockableWindowManager();
@@ -161,7 +156,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		txtfilename.requestFocus();
 
 		txtfilename.selectAll();
-		return;
 	}
 
 	/** Closes the FastOpen window */
@@ -644,7 +638,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	 *                Description of the Parameter
 	 * @return Description of the Return Value
 	 */
-	private String[] extractPathFromPrjDir(List foundfileslist)
+	/*private String[] extractPathFromPrjDir(List foundfileslist)
 	{
 		String paths[] = new String[foundfileslist.size()];
 
@@ -656,7 +650,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		}
 
 		return paths;
-	}
+	}*/
 
 	/**
 	 * @deprecated Moved to FastOpenFile class. This was done to avoid
@@ -714,7 +708,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		 * Get rid of any path info, since we index by filename and not
 		 * by pathname
 		 */
-		int idx = filename.lastIndexOf("/");
+		int idx = filename.lastIndexOf('/');
 		if (idx > -1)
 		{
 			filename = filename.substring(idx + 1);
@@ -742,7 +736,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 
 			List vecReturn = new ArrayList(2);
 			vecReturn.add(0, match.toString(1));
-			vecReturn.add(1, new Integer(match.toString(2)));
+			vecReturn.add(1, Integer.valueOf(match.toString(2)));
 			return vecReturn;
 		}
 
@@ -758,13 +752,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		{
 			projectCombo.removeAllItems();
 		}
-		Iterator iter = projectviewer.ProjectManager.getInstance().getProjects();
+		
 //		int currProjectIdx = 0;
 		projectviewer.vpt.VPTProject currPrj = files.getCurrentProject(view);
 
 		List projects = new ArrayList();
-
-		for (int i = 1; iter.hasNext(); i++)
+		Iterator iter = projectviewer.ProjectManager.getInstance().getProjects();
+		while(iter.hasNext())
 		{
 			projectviewer.vpt.VPTProject nextItem = (projectviewer.vpt.VPTProject) iter
 				.next();
@@ -945,7 +939,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 				of repeated seaching in jEdit's hash properties when it is not
 				going to change between calls. */
 				Iterator iterPrjFiles = allfiles.iterator();
-				int i = 0;
 				 
 				/* Since we check for hideOpenFiles option, there is a possibility
 				    of Array fragmentation because it would be incremented
@@ -954,12 +947,9 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 				while (iterPrjFiles.hasNext())
 				{
 					FastOpenFile file = (FastOpenFile) iterPrjFiles.next();
-					if (hideOpenFiles)
+					if (hideOpenFiles && file.isOpened())
 					{
-						if (file.isOpened())
-						{
-							continue;
-						}
+						continue;
 					}
 
 					if (re.getMatch(file.getName()) != null)
@@ -1016,13 +1006,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	{
 		String indexManagerType = jEdit.getProperty("fastopen.indexing.strategy");
 		//System.out.println("See indexmanager strategy " + indexManagerType);
-		if (indexManagerType.equals("polling"))
+		if ("polling".equals(indexManagerType))
 		{
 			IndexManager idxMgr = new PollingIndexManager(view, files);
 			idxMgr.addIndexListener(this);
 			return idxMgr;
 		}
-		else if (indexManagerType.equals("simple"))
+		else if ("simple".equals(indexManagerType))
 		{
 			IndexManager idxMgr = new SimpleIndexManager(view, files);
 			idxMgr.addIndexListener(this);
@@ -1245,7 +1235,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 
 	class FastOpenComparator implements Comparator
 	{
-		Comparator collator = java.text.Collator.getInstance();
+		private final Comparator collator = java.text.Collator.getInstance();
 
 		/**
 		 * Compares 2 files for sorting purpose.
