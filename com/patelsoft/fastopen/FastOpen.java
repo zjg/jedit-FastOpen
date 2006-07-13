@@ -39,8 +39,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	public static final String NAME = "fastopen";
 
 	// Version for title
-	private final String VERSION = "v"
-		+ jEdit.getProperty("plugin.com.patelsoft.fastopen.FastOpenPlugin.version");
+	private final String TITLE = "FastOpen v" + jEdit.getProperty("plugin.com.patelsoft.fastopen.FastOpenPlugin.version");
 
 	private final View view;
 	private FastOpenTextField txtfilename;
@@ -86,7 +85,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		this.view = view;
 		noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
 		DockableWindowManager dwm = view.getDockableWindowManager();
-		dwm.setDockableTitle(NAME, VERSION);
+		dwm.setDockableTitle(NAME, TITLE);
 		indexManager = getIndexManager();
 		setupFastOpen();
 	}// End of FastOpen constructor
@@ -100,13 +99,11 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		{
 			String txtSelection = getFileAtCaret();
 			int lno = -1;
-			List vecContent = parseFileLnoPattern(txtSelection);
-
-			if (vecContent != null)
-			{
-				// txtSelection = (String)vecContent.get(0);
+			try {
+				List vecContent = parseFileLnoPattern(txtSelection);
 				lno = ((Integer) vecContent.get(1)).intValue();
 			}
+			catch (NullPointerException npe) {}
 
 			if (txtSelection != null)
 			{
@@ -148,10 +145,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		{
 			loadProjectsInCombo();
 		}
-		// }
-		txtfilename.requestFocus();
-
 		txtfilename.selectAll();
+		txtfilename.requestFocus();
 	}
 
 	/** Closes the FastOpen window */
@@ -344,7 +339,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 	public JDialog showWindow()
 	{
 		if (mainWindow == null) {
-			mainWindow = new JDialog(view, "FastOpen: " + VERSION, false);
+			mainWindow = new JDialog(view, TITLE);
 			mainWindow.addKeyListener(new KeyHandler());
 			mainWindow.setSize(554, 182); /* Default size for new FastOpen
 			 				installation. */
