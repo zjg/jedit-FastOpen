@@ -85,7 +85,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		this.view = view;
 		noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
 		DockableWindowManager dwm = view.getDockableWindowManager();
-		dwm.setDockableTitle(NAME, TITLE);
+//		This line depends on 4.3pre5
+//		dwm.setDockableTitle(NAME, TITLE);
 		indexManager = getIndexManager();
 		setupFastOpen();
 	}// End of FastOpen constructor
@@ -98,12 +99,15 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		if (jEdit.getBooleanProperty("fastopen.patternFromSelectedText"))
 		{
 			String txtSelection = getFileAtCaret();
-			int lno = -1;
+			int lineNumber = -1;
 			try {
 				List vecContent = parseFileLnoPattern(txtSelection);
-				lno = ((Integer) vecContent.get(1)).intValue();
+				lineNumber = ((Integer) vecContent.get(1)).intValue();
 			}
-			catch (NullPointerException npe) {}
+			catch (NullPointerException npe) 
+			{ 
+				/* There is no line number there */ 
+			} 
 
 			if (txtSelection != null)
 			{
@@ -117,9 +121,9 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 						/* Only one matching file so don't show the mainWindow */
 						openFile((FastOpenFile) matchingfiles[0]);
 
-						if (lno != -1)
+						if (lineNumber != -1)
 						{
-							gotoLine(lno);
+							gotoLine(lineNumber);
 						}
 						closeMainWindow();
 						return;

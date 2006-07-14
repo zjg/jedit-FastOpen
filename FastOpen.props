@@ -6,13 +6,14 @@ plugin.com.patelsoft.fastopen.FastOpenPlugin.docs=docs/index.html
 
 #external depencies
 plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.0=jdk 1.4
-plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.1=jedit 04.03.05.00
+plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.1=jedit 04.02.99.00
 #plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.2=plugin projectviewer.ProjectPlugin 2.1
 
 
 plugin.com.patelsoft.fastopen.FastOpenPlugin.activate=defer
 fastopen.title=Fast Open
 fastopen.label=Fast Open
+fastopen.longtitle=Fast Open ${plugin.com.patelsoft.fastopen.FastOpenPlugin.version}
 
 #Menu Items Settings
 plugin.com.patelsoft.fastopen.FastOpenPlugin.menu=fastopen  fastopenwindow.show fastopen.reindex
