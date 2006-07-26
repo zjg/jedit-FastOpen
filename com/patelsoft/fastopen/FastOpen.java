@@ -140,11 +140,11 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 				}
 			}
 		}
-		else {
+		/* else {
 			HistoryModel model = txtfilename.getModel();
 			String lastEntry = model.get(0).toString();
 			txtfilename.setText(lastEntry);
-		}
+		} */
 		if (files.isPVThere())
 		{
 			loadProjectsInCombo();
