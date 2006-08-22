@@ -81,6 +81,10 @@ You can also color annotate Open files to identify or differentiate between open
 	<li>Refactored FastOpen to use java.util.regex instead of gnu regexp fixing bug 1517598.</li>
 </ol>
 
+<ol><b><i>Known Issues</i></b>
+	<li>FastOpen freezes when switching Projects using FastOpen's Project Switcher if ProjectViewer is open. Switching Project without opening ProjectViewer works fine.</li>
+</ol>
+
 <h3 id="version2.0">Release Notes & Change Log for Version : 2.0 (10th January 2006)</h3>
 <ol>
 		<li>FastOpen now maintains an Index of files instead of querying the sources each time. An Index Manager thread will update the index in the background from time-to-time(configurable via Global Options). This immensely speeds up FastOpen.</li>

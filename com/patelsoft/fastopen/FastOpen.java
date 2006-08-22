@@ -32,8 +32,8 @@ import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.Log;
 
-public class FastOpen extends JPanel implements ActionListener, IndexListener,
-	DefaultFocusComponent
+public class FastOpen extends JPanel implements ActionListener, IndexListener
+	
 {
 	// dockable name
 	public static final String NAME = "fastopen";
@@ -332,6 +332,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		KeyHandler keyHandler = new KeyHandler();
 		addKeyListener(keyHandler);
 		txtfilename.addKeyListener(keyHandler);
+		if(projectCombo != null)
+		{
+			projectCombo.addKeyListener(keyHandler);
+		}
 
 	}// End of setupFastOpen
 
@@ -1153,9 +1157,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 		 */
 		public void itemStateChanged(ItemEvent evt)
 		{
-			// Log.log(Log.DEBUG,this,"Inside itemStateChanged
-			// paused " + paused +" event is ItemEvent.SELECTED "+
-			// (evt.getStateChange() == ItemEvent.SELECTED));
+			Log.log(Log.DEBUG,this,"Inside itemStateChanged paused " + paused +" event is ItemEvent.SELECTED "+
+			 (evt.getStateChange() == ItemEvent.SELECTED));
 			if (!paused && evt.getStateChange() == ItemEvent.SELECTED)
 			{
 				projectviewer.vpt.VPTProject newProject = (projectviewer.vpt.VPTProject) evt
@@ -1196,6 +1199,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener,
 				// not search the newly selected Project at
 				// all!!
 				// updateTitle();
+				System.out.println("Suggesting reindex");
 				indexManager.suggestReindex();
 
 				txtfilename.grabFocus();
