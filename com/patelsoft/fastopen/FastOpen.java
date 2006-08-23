@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.Log;
 
-public class FastOpen extends JPanel implements ActionListener, IndexListener
+public class FastOpen extends JPanel implements ActionListener, IndexListener, DefaultFocusComponent
 	
 {
 	// dockable name
