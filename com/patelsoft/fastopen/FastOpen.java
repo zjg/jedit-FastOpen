@@ -1157,8 +1157,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		 */
 		public void itemStateChanged(ItemEvent evt)
 		{
-			Log.log(Log.DEBUG,this,"Inside itemStateChanged paused " + paused +" event is ItemEvent.SELECTED "+
-			 (evt.getStateChange() == ItemEvent.SELECTED));
 			if (!paused && evt.getStateChange() == ItemEvent.SELECTED)
 			{
 				projectviewer.vpt.VPTProject newProject = (projectviewer.vpt.VPTProject) evt
@@ -1199,7 +1197,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				// not search the newly selected Project at
 				// all!!
 				// updateTitle();
-				System.out.println("Suggesting reindex");
+				Log.log(Log.DEBUG, this, "Suggesting reindex");
 				indexManager.suggestReindex();
 
 				txtfilename.grabFocus();

@@ -2,6 +2,7 @@ package com.patelsoft.fastopen;
 
 import java.util.Set;
 import org.gjt.sp.jedit.*;
+import org.gjt.sp.util.*;
 
 /**
 *
@@ -58,7 +59,7 @@ public class PollingIndexManager extends AbstractIndexManager implements Runnabl
 		collecting = true;
 		queryFilesFromSource();
 		long end = System.currentTimeMillis();
-		System.out.println("Polling Thread ran and collected "+(allfiles != null? allfiles.size():0) + " files in " + (end-start)/1000 +" secs");
+		Log.log(Log.MESSAGE, this, "Polling Thread ran and collected "+(allfiles != null? allfiles.size():0) + " files in " + (end-start)/1000 +" secs");
 		//System.out.println("Total files collected " + allfiles.size());
 		collecting = false;
 	}

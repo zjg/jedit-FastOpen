@@ -39,7 +39,7 @@ public abstract class AbstractIndexManager implements IndexManager
 	*/
 	protected void queryFilesFromSource()
 	{
-		System.out.println("Inside queryFilesFromSource allfiles size " + allfiles.size());
+		//System.out.println("Inside queryFilesFromSource allfiles size " + allfiles.size());
 		notifyListeners(INDEXING_STARTED);
 		Set tmp_set = new HashSet(20,1.0f);
 		if(allfiles != null && allfiles.size() > 0)

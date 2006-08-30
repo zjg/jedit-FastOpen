@@ -2,6 +2,7 @@ package com.patelsoft.fastopen;
 
 import java.util.*;
 import org.gjt.sp.jedit.*;
+import org.gjt.sp.util.*;
 import projectviewer.vpt.VPTNode;
 
 import projectviewer.vpt.VPTProject;
@@ -99,7 +100,6 @@ public class Files
 	 */
 	void prjFile2FOFile(View view, Collection allFiles)
 	{
-		System.out.println("Inside prjFile2FOFile");
 		if(isPVThere() && atleatOneProject(view))
 		{
                     //Loop until project is loaded
@@ -112,9 +112,8 @@ public class Files
                         catch(InterruptedException e)
                         {}
                     }
-			System.out.println("Inside isPVThere");
 			//Iterator iter = ((projectviewer.vpt.VPTProject)getCurrentProject(view)).getOpenableNodes().iterator();
-                        System.out.println("Got project " + getCurrentProject(view));
+                        Log.log(Log.DEBUG,this,"Got project " + getCurrentProject(view));
 						Collection nodes = (getCurrentProject(view)).getOpenableNodes();
 						//synchronized(nodes)
 						//{
@@ -173,7 +172,6 @@ public class Files
 	*/
 	void diffPrjFilesWithOpenBuffers(Buffer buffer[],View view, Collection allFiles)
 	{
-		System.out.println("Inside diffPrjFilesWithOpenBuffers");
 		if(buffer == null || buffer.length == 0)
 		{
 			return;
@@ -182,7 +180,7 @@ public class Files
 		if(isPVThere())
 		{
 			projectviewer.vpt.VPTProject project = getCurrentProject(view);
-			System.out.println("Got curr project in diffPrjFilesWithOpenBuffers " + project);
+			//System.out.println("Got curr project in diffPrjFilesWithOpenBuffers " + project);
 			if(project != null)
 			{
 				//if(!project.isInProject(buffer[i].getPath()))
@@ -223,7 +221,6 @@ public class Files
 
 	public void bufferEntry2FastOpenFile(List files, Collection allFiles)
 	{
-		System.out.println("Inside bufferEntry2FastOpenFile");
 		Iterator iter = files.iterator();
 		while(iter.hasNext())
 		{
