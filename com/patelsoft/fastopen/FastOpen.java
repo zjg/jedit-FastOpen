@@ -149,8 +149,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		{
 			loadProjectsInCombo();
 		}
+		
 		txtfilename.selectAll();
 		txtfilename.requestFocus();
+		mainWindow.setVisible(true);
 	}
 
 	/** Closes the FastOpen window */
@@ -172,7 +174,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		if (mainWindow != null)
 		{
 			mainWindow.dispose();
-			mainWindow = null;
+			//mainWindow = null;
 		}
 
 	}
@@ -371,7 +373,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		}
 
 		);
-		mainWindow.setVisible(true);
+		
 		focusOnDefaultComponent();
 		mainWindow.addFocusListener(new FastOpenFocusListener());
 
