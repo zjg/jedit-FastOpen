@@ -21,8 +21,8 @@
 -->
 
 <project name="FastOpen" default="dist" basedir=".">
-	<property file="../build.properties"/>
 	<property file="build.properties"/>
+	<property file="../build.properties"/>
 
 	<property name="jar.name"  value="${ant.project.name}.jar"/>
 	<property name="version"  value="2.1"/>

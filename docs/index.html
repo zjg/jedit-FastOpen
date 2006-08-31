@@ -20,12 +20,6 @@
 <H2>Introduction</H2>
 <P>FastOpen is a plugin designed to quickly open any file in the current project by just typing in the first few characters of the filename you want to open. Besides quickly opening any file, it has a lot of features like switching between projects, indicating invalid filenames etc. FastOpen can open files in the projects and/or non project files too.</P>
 
-<H3>FastOpen Minimum Requirements</H3>
-
-<UL>
-<LI>Jdk 1.3+ </LI>
-<LI>JEdit 4.3pre6+ </LI>
-<LI>ProjectViewer 2.1.3.4+(Optional) </LI></UL>
 
 <h3 id="whatsnew">What's New :</h3>
 Take a look at the <a href="#introToNewFeatures">Introduction to New Features</a> & <a href="#releasenotes">release notes.</a>
@@ -41,7 +35,7 @@ Take a look at the <a href="#introToNewFeatures">Introduction to New Features</a
 <p>
         FastOpen can be used with or without ProjectViewer being docked, but you must have atleast one project currently loaded and selected in ProjectViewer (if you are using ProjectViewer). You can also switch between projects using just FastOpen. To search for a file in your project, simply type in the first few characters of the filename(including regexp patterns if so desired). FastOpen will list down matching files in the list below. You can open the file by double clicking or selecting it from keyboard.
         </p>
-        <p> 
+        <p>
 		You can map FastOpen to a favourite shortcut key for really fast, mouse-free access to your project files.
 </p>
 
@@ -72,18 +66,19 @@ You can also color annotate Open files to identify or differentiate between open
 
 <a name="releasenotes"></a>
 <h3 id="version2.1">Release Notes & Change Log for Version : 2.1 (31st August 2006)</h3>
+<p> <b> Requirements: </b>
+Jdk 1.5+, JEdit 4.3pre6+, ProjectViewer 2.1.3.4+(Optional) </p>
 <ol>
-	<li>Updated to jEdit 4.3 pre as base requirement.</li>
 	<li>Added "delay before searching" (in global options) to enable delay before FastOpen starts searching the index. This improves the performance drastically preventing event firing and thread contentions on every key press since the text to find would now be batched.</li>
 	<li>Fixed NPE if ProjectViewer is present but contains no projects.</li>
 	<li>Refactored FastOpen to use java.util.regex instead of gnu regexp fixing bug 1517598.</li>
-	<li>Made textarea the "default focus component". (Alan Ezust)</li>
-	<li> ESC now dismisses dockable. (Alan Ezust) </li>
-	<li> Got rid of redundant "fastopen window", and fixed the dockable so that it works like the dialog used to. (Alan Ezust) </li>
+	<li>Made textarea the "default focus component", and ESC dismisses dockable. (Alan Ezust)
 	<li><font color="red"><i>For those using FastOpen with ProjectViewer plugin, we recommend using only ProjectViewer 2.1.3.4+. Using lower versions of ProjectViewer with FastOpen freezes jEdit and killing the process is the only way out.</i></font></li>
 </ol>
 
 <h3 id="version2.0">Release Notes & Change Log for Version : 2.0 (10th January 2006)</h3>
+<p> <b> Requirements: </b>
+Jdk 1.3+, JEdit 4.2final+, ProjectViewer 2.1+ (Optional) </p>
 <ol>
 		<li>FastOpen now maintains an Index of files instead of querying the sources each time. An Index Manager thread will update the index in the background from time-to-time(configurable via Global Options). This immensely speeds up FastOpen.</li>
 		<li>File search string entered during the time the Index is being created(generally on first execution of FastOpen), is buffered and is automatically executed when indexing process is completed. So during initial index building esp. of large projects be patient.</li>

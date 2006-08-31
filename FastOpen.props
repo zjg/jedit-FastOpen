@@ -5,7 +5,7 @@ plugin.com.patelsoft.fastopen.FastOpenPlugin.version=2.1
 plugin.com.patelsoft.fastopen.FastOpenPlugin.docs=docs/index.html
 
 #external depencies
-plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.0=jdk 1.4
+plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.0=jdk 1.5
 plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.1=jedit 04.03.06.00
 #plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.2=plugin projectviewer.ProjectPlugin 2.1
 
