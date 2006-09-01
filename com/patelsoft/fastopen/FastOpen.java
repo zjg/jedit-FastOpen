@@ -84,9 +84,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		super();
 		this.view = view;
 		noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
-		DockableWindowManager dwm = view.getDockableWindowManager();
-//		This line depends on 4.3pre5
-//		dwm.setDockableTitle(NAME, TITLE);
 		indexManager = getIndexManager();
 		setupFastOpen();
 	}// End of FastOpen constructor
@@ -152,7 +149,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		
 		txtfilename.selectAll();
 		txtfilename.requestFocus();
-		mainWindow.setVisible(true);
+		if (mainWindow != null) mainWindow.setVisible(true);
 	}
 
 	/** Closes the FastOpen window */
