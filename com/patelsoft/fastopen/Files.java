@@ -1,9 +1,13 @@
 package com.patelsoft.fastopen;
 
-import java.util.*;
-import org.gjt.sp.jedit.*;
-import org.gjt.sp.util.*;
-import projectviewer.vpt.VPTNode;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import org.gjt.sp.jedit.Buffer;
+import org.gjt.sp.jedit.BufferHistory;
+import org.gjt.sp.jedit.View;
+import org.gjt.sp.util.Log;
 
 import projectviewer.vpt.VPTProject;
 // import projectviewer.*;

@@ -1,18 +1,37 @@
 package com.patelsoft.fastopen;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import javax.swing.*;
+
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.gjt.sp.jedit.*;
+
+import org.gjt.sp.jedit.AbstractOptionPane;
+import org.gjt.sp.jedit.EditPlugin;
+import org.gjt.sp.jedit.View;
+import org.gjt.sp.jedit.jEdit;
 import org.gjt.sp.jedit.gui.ColorWellButton;
-import org.gjt.sp.jedit.gui.DockableWindowManager;
-import org.gjt.sp.util.*;
+import org.gjt.sp.util.Log;
 
 
 public class FastOpenPlugin extends EditPlugin

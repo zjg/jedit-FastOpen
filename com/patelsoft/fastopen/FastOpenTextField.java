@@ -1,11 +1,11 @@
 package com.patelsoft.fastopen;
 
-import org.gjt.sp.jedit.gui.HistoryModel;
-import org.gjt.sp.jedit.gui.HistoryTextField;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+
+import org.gjt.sp.jedit.gui.HistoryTextField;
 
 public class FastOpenTextField extends HistoryTextField
 {
