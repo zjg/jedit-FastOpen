@@ -9,9 +9,9 @@ plugin.com.patelsoft.fastopen.FastOpenPlugin.description=FastOpen is a plugin de
 plugin.com.patelsoft.fastopen.FastOpenPlugin.longdescription=description.html
 
 #external depencies
-plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.0=jdk 1.5
+plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.0=jdk 1.4
 plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.1=jedit 04.03.06.00
-plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.2=optional plugin projectviewer.ProjectPlugin 2.1
+plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.2=optional plugin projectviewer.ProjectPlugin 2.1.3.4
 
 plugin.com.patelsoft.fastopen.FastOpenPlugin.activate=defer
 fastopen.title=Fast Open
