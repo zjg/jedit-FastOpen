@@ -58,7 +58,7 @@ import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.Log;
 
 public class FastOpen extends JPanel implements ActionListener, IndexListener, DefaultFocusComponent
-	
+
 {
 	// dockable name
 	public static final String NAME = "fastopen";
@@ -99,7 +99,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Constructor for the FastOpen object
-	 * 
+	 *
 	 * @param view
 	 *                Description of the Parameter
 	 */
@@ -126,10 +126,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				List vecContent = parseFileLnoPattern(txtSelection);
 				lineNumber = ((Integer) vecContent.get(1)).intValue();
 			}
-			catch (NullPointerException npe) 
-			{ 
-				/* There is no line number there */ 
-			} 
+			catch (NullPointerException npe)
+			{
+				/* There is no line number there */
+			}
 
 			if (txtSelection != null)
 			{
@@ -171,7 +171,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		{
 			loadProjectsInCombo();
 		}
-		
+
 		txtfilename.selectAll();
 		txtfilename.requestFocus();
 		if (mainWindow != null) mainWindow.setVisible(true);
@@ -183,7 +183,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		if (mainWindow != null) {
 			GUIUtilities.saveGeometry(mainWindow, "fastopen.window");
 		}
-		
+
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -364,7 +364,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	}// End of setupFastOpen
 
 	/**
-	 * 
+	 *
 	 * @return A JDialog enclosing the FastOpen panel.
 	 */
 
@@ -395,7 +395,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		}
 
 		);
-		
+
 		focusOnDefaultComponent();
 		mainWindow.addFocusListener(new FastOpenFocusListener());
 
@@ -450,7 +450,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Method
-	 * 
+	 *
 	 * @param evt
 	 *                Description of the Parameter
 	 */
@@ -529,7 +529,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Method
-	 * 
+	 *
 	 * @param event
 	 *                Description of the Parameter
 	 */
@@ -566,9 +566,9 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Method
-	 * 
+	 *
 	 * @param matchingfiles List of files to open
-	 * 
+	 *
 	 */
 	/*
 	 * private void openFile(int matchingfileindex[]) { if(matchingfileindex !=
@@ -643,7 +643,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Method
-	 * 
+	 *
 	 * @param pf
 	 *                Description of the Parameter
 	 * @return Description of the Return Value
@@ -655,7 +655,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Method
-	 * 
+	 *
 	 * @param foundfileslist
 	 *                Description of the Parameter
 	 * @return Description of the Return Value
@@ -679,7 +679,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	 *             multiple path (String object) creation for efficiency
 	 *             reasons. Gets the decoratedPath attribute of the FastOpen
 	 *             object
-	 * 
+	 *
 	 * @param pf
 	 *                Description of the Parameter
 	 * @return The decoratedPath value
@@ -687,13 +687,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	/*
 	 * public String getDecoratedPath(FastOpenFile pf) { if(pf == null) {
 	 * return null; }
-	 * 
+	 *
 	 * return pf.getName() + " (" + pf.getPath() + ")"; }
 	 */
 
 	/**
 	 * Gets the fileAtCaret attribute of the FastOpen object
-	 * 
+	 *
 	 * @return The fileAtCaret value
 	 */
 	private String getFileAtCaret()
@@ -745,14 +745,14 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Method
-	 * 
+	 *
 	 * @param txtSelection
 	 *                Description of the Parameter
 	 */
 	List parseFileLnoPattern(String txtSelection)
 	{
 		Matcher matcher = reLineNo.matcher(txtSelection);
-		
+
 		if ((txtSelection != null && txtSelection.trim().length() != 0)	&& matcher.matches())
 		{
 			List vecReturn = new ArrayList(2);
@@ -773,7 +773,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		{
 			projectCombo.removeAllItems();
 		}
-		
+
 //		int currProjectIdx = 0;
 		projectviewer.vpt.VPTProject currPrj = files.getCurrentProject(view);
 
@@ -797,7 +797,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Method
-	 * 
+	 *
 	 * @param fileToFind
 	 *                Description of the Parameter
 	 * @return Description of the Return Value
@@ -808,7 +808,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	 * if(fileToFind != null) { List foundfileslist = new ArrayList();
 	 * //System.out.println( "Trying to match inside retrieveMatchingFiles " +
 	 * fileToFind); Set allfiles = new TreeSet(comparator);
-	 * 
+	 *
 	 * //// long start = System.currentTimeMillis(); Collection dataFiles =
 	 * files.prjFile2FOFile(view); if(dataFiles != null) {
 	 * allfiles.addAll(dataFiles); }
@@ -819,37 +819,37 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	 * if(dataFiles != null) { allfiles.addAll(dataFiles); } // end =
 	 * System.currentTimeMillis(); System.out.println("Time taken to diff
 	 * projectfile with open buffers and add " + (end-start) + " ms");
-	 * 
+	 *
 	 *  // start = System.currentTimeMillis();
 	 * if(jEdit.getBooleanProperty("fastopen.showrecentfiles")) { dataFiles
 	 * =getRecentFiles(); if(dataFiles != null) {
 	 * allfiles.addAll(dataFiles); } } // end = System.currentTimeMillis();
 	 * System.out.println("Time taken to get recentfiles and add " +
 	 * (end-start) + " ms");
-	 * 
-	 * 
+	 *
+	 *
 	 * System.out.println("Total files collected " + allfiles.size());
 	 * //Iterator iterPrjFiles = project.getFiles().iterator(); Iterator
 	 * iterPrjFiles = allfiles.iterator();
-	 * 
+	 *
 	 * List vecPattern = parseFileLnoPattern(fileToFind); if(vecPattern !=
 	 * null) { fileToFind = (String)vecPattern.get(0); } try { RE re = null;
 	 * if(jEdit.getBooleanProperty("fastopen.ignorecase")) { re = new
 	 * RE(MiscUtilities.globToRE("^" + fileToFind), RE.REG_ICASE); } else {
 	 * re = new RE(MiscUtilities.globToRE("^" + fileToFind)); }
-	 * 
+	 *
 	 * while(iterPrjFiles.hasNext()) { FastOpenFile file =
 	 * (FastOpenFile)iterPrjFiles.next();
 	 * if(jEdit.getBooleanProperty("fastopen.hideOpenFiles")) {
 	 * if(file.isOpened()) { continue; } }
-	 * 
+	 *
 	 * if(re.getMatch(file.getName()) != null) { foundfileslist.add(file); } }
 	 * //End of while iterPrjFiles = null;
-	 * 
+	 *
 	 * //if(jEdit.getBooleanProperty("fastopen.sortFiles")) //{ //
 	 * Collections.sort(foundfileslist, comparator); //} } catch(REException
 	 * e) { txtfilename.setForeground(Color.red); return foundfileslist; }
-	 * 
+	 *
 	 * return foundfileslist; } else { return new ArrayList(0); } }
 	 */
 
@@ -870,30 +870,30 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			 * long start = System.currentTimeMillis(); //start =
 			 * System.currentTimeMillis();
 			 * files.prjFile2FOFile(view,allfiles);
-			 * 
+			 *
 			 * //end = System.currentTimeMillis();
 			 * //System.out.println("Time taken to get projects and
 			 * add " + (end-start) + " ms but before adding to
 			 * addFiles");
-			 * 
+			 *
 			 * //long end2 = System.currentTimeMillis();
 			 * //System.out.println("Time taken to get projects and
 			 * add " + (end2-end) + " ms total time is " +
 			 * (end2-start));
-			 * 
+			 *
 			 * //start = System.currentTimeMillis();
 			 * files.diffPrjFilesWithOpenBuffers(jEdit.getBuffers(),view,
 			 * allfiles);
-			 * 
+			 *
 			 * //end = System.currentTimeMillis();
 			 * //System.out.println("Time taken to diff projectfile
 			 * with open buffers and add " + (end-start) + " ms");
-			 * 
+			 *
 			 * //start = System.currentTimeMillis();
-			 * 
+			 *
 			 * if(jEdit.getBooleanProperty("fastopen.showrecentfiles")) {
 			 * getRecentFiles(allfiles); }
-			 * 
+			 *
 			 * long end = System.currentTimeMillis();
 			 * System.out.println("Time taken to get allfiles and
 			 * add " + (end-start) + " ms");
@@ -929,34 +929,43 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			}
 
 			// long start = System.currentTimeMillis();
-			List foundfileslist = new ArrayList(allfiles.size()); 
+			List foundfileslist = new ArrayList(allfiles.size());
 
 			/* Initializating Collections is a Performance Optimization
 			 since the need for expansion is done away with. Setting
 			 foundfileslist's size to max allfiles.size() since  thats
 			 the  max it can go(in case of say regexp '*') anyways.
 			 unused elements are as it is NULLs. */
-			
+
 				Pattern re = null;
-				if (jEdit.getBooleanProperty("fastopen.ignorecase"))
+
+				try
 				{
-					re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind),Pattern.CASE_INSENSITIVE);
+					if (jEdit.getBooleanProperty("fastopen.ignorecase"))
+					{
+						re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind),Pattern.CASE_INSENSITIVE);
+					}
+					else
+					{
+						re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind));
+					}
 				}
-				else
+				catch(java.util.regex.PatternSyntaxException e)
 				{
-					re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind));
+					txtfilename.setForeground(Color.red);
+					return null;
 				}
 
 				// start = System.currentTimeMillis();
 
 				final boolean hideOpenFiles = jEdit
-					.getBooleanProperty("fastopen.hideOpenFiles"); 
+					.getBooleanProperty("fastopen.hideOpenFiles");
 
 				/* Moved outside the while loop to improve performance instead
 				of repeated seaching in jEdit's hash properties when it is not
 				going to change between calls. */
 				Iterator iterPrjFiles = allfiles.iterator();
-				 
+
 				/* Since we check for hideOpenFiles option, there is a possibility
 				    of Array fragmentation because it would be incremented
 				    but nothing would be stored at  that position since the file under
@@ -1059,7 +1068,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	// Inner Classes start
 	/**
 	 * Description of the Class
-	 * 
+	 *
 	 * @author jiger
 	 * @created February 24, 2003
 	 */
@@ -1068,7 +1077,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param event
 		 *                Description of the Parameter
 		 */
@@ -1082,7 +1091,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param e
 		 *                Description of the Parameter
 		 */
@@ -1096,7 +1105,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param e
 		 *                Description of the Parameter
 		 */
@@ -1106,7 +1115,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param e
 		 *                Description of the Parameter
 		 */
@@ -1116,7 +1125,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param e
 		 *                Description of the Parameter
 		 */
@@ -1126,7 +1135,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param e
 		 *                Description of the Parameter
 		 */
@@ -1136,7 +1145,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param event
 		 *                Description of the Parameter
 		 */
@@ -1151,7 +1160,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Description of the Class
-	 * 
+	 *
 	 * @author jiger
 	 * @created February 24, 2003
 	 */
@@ -1174,7 +1183,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Description of the Method
-		 * 
+		 *
 		 * @param evt
 		 *                Description of the Parameter
 		 */
@@ -1233,7 +1242,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	/**
 	 * FastOpen comparator class to compare two Project files for various
 	 * stuff like already open, etc
-	 * 
+	 *
 	 * @author jiger
 	 * @created February 24, 2003
 	 */
@@ -1244,7 +1253,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 		/**
 		 * Compares 2 files for sorting purpose.
-		 * 
+		 *
 		 * @param obj1
 		 *                FastOpenFile 1
 		 * @param obj2
@@ -1292,13 +1301,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 						{
 							return collator.compare(
 								pf1.getDecoratedPath().toLowerCase(),
-								pf2.getDecoratedPath().toLowerCase()); 
+								pf2.getDecoratedPath().toLowerCase());
 						/* Paths are converted to lowercase for comparision
 						 to simulate case-insensivitivity becoz not doing
 						so would lead to showing the same file twice if the
-						path contains mixed case letters. For e.g jEdit Recent 
+						path contains mixed case letters. For e.g jEdit Recent
 						files would store path as C:/dir/path_to_file.txt and
-						Projectviewer would as c:\dir/path_to_file.txt (notice 
+						Projectviewer would as c:\dir/path_to_file.txt (notice
 						the c drive case). */
  						}
 					}
@@ -1306,7 +1315,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 					{
 						return collator.compare(
 							pf1.getDecoratedPath().toLowerCase(),
-							pf2.getDecoratedPath().toLowerCase()); 
+							pf2.getDecoratedPath().toLowerCase());
 					}
 				}
 				else if (fileOrder != null
@@ -1351,7 +1360,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				else
 				{
 					return collator.compare(
-						pf1.getDecoratedPath().toLowerCase(), 
+						pf1.getDecoratedPath().toLowerCase(),
 						pf2.getDecoratedPath().toLowerCase());
 				}
 			}
@@ -1362,7 +1371,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * Renderer for Matching File List.
-	 * 
+	 *
 	 * @author jiger
 	 * @created February 24, 2003
 	 */
@@ -1372,7 +1381,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		/**
 		 * Gets the listCellRendererComponent attribute of the
 		 * FastOpenRenderer object
-		 * 
+		 *
 		 * @param list
 		 *                Description of the Parameter
 		 * @param value
@@ -1442,13 +1451,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		public void focusGained(FocusEvent e)
 		{
 			focusOnDefaultComponent();
-			
+
 		}
 
 		public void focusLost(FocusEvent e)
 		{}
 	}
-	
+
 	class KeyHandler extends KeyAdapter
 	{
 		public void keyPressed(KeyEvent evt)
