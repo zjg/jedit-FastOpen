@@ -58,9 +58,14 @@ public class FastOpenPlugin extends EditPlugin
 			View v = (View)iter.nextElement();
 			v.removeWindowListener(wa);
 		}
+		viewsToFastOpen.clear();
 		super.stop();
 	}
 
+	/**
+	 * @param view The View we activated FastOpen from.
+	 * @return A lightweight JPanel wrapper around the FastOpen instance for this View.
+	 */
 	public static FastOpen getFastOpenInstance(View view)
 	{
 		/*DockableWindowManager dwm = view.getDockableWindowManager();

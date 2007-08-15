@@ -364,10 +364,16 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	}// End of setupFastOpen
 
 	/**
+	 * @return a JPanel enclosing the FastOpen panel
+	 */
+	public JPanel showPanel() {
+		return new WrapFast(this);
+	}
+	
+	/**
 	 *
 	 * @return A JDialog enclosing the FastOpen panel.
 	 */
-
 	public JDialog showWindow()
 	{
 		if (mainWindow == null) {
@@ -1470,4 +1476,26 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		}
 	}
 
+	/**
+	 * A FastOpen JPanel wrapper that also handles default focus events for FastOpen.
+	 * 
+	 */
+	static class WrapFast extends JPanel implements DefaultFocusComponent {
+		FastOpen mF;
+		WrapFast(FastOpen f) {
+			super(new BorderLayout());
+			mF=f;
+			if (mF.mainWindow != null) {
+				mF.mainWindow.removeAll();
+				mF.mainWindow.dispose();
+				mF.mainWindow = null;
+			}
+			add(mF, BorderLayout.CENTER);
+			
+		}
+		public void focusOnDefaultComponent()
+		{
+			mF.focusOnDefaultComponent();
+		};
+	}
 }
