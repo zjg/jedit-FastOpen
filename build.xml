@@ -21,11 +21,14 @@
 -->
 
 <project name="FastOpen" default="dist" basedir=".">
+    <property file="FastOpen.props" />
 	<property file="build.properties"/>
 	<property file="../build.properties"/>
 
 	<property name="jar.name"  value="${ant.project.name}.jar"/>
-	<property name="version"  value="2.1"/>
+	
+    <property name="version" value="${plugin.com.patelsoft.fastopen.FastOpenPlugin.version}" />
+    
 	<property name="srcfile"  value="${ant.project.name}_src_${version}.zip"/>
 
 	<property name="src.dir" value="."/>
@@ -51,8 +54,8 @@
 			destdir="${build.dir}"
 			deprecation="on"
 			debug="on"
-			source="1.3"
-			target="1.3"
+			source="1.5"
+			target="1.5"
 			includejavaruntime="no"
 			nowarn="true"
 		>
