@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +57,8 @@ import org.gjt.sp.jedit.gui.DockableWindowManager;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.Log;
+
+import projectviewer.vpt.VPTProject;
 
 public class FastOpen extends JPanel implements ActionListener, IndexListener, DefaultFocusComponent
 
@@ -783,19 +786,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 //		int currProjectIdx = 0;
 		projectviewer.vpt.VPTProject currPrj = files.getCurrentProject(view);
 
-		List projects = new ArrayList();
-		Iterator iter = projectviewer.ProjectManager.getInstance().getProjects();
-		while(iter.hasNext())
-		{
-			projectviewer.vpt.VPTProject nextItem = (projectviewer.vpt.VPTProject) iter
-				.next();
-			projects.add(nextItem);
-		}
-
-		Collections.sort(projects, new Sorter());
+		List<VPTProject> readOnlyProjects = projectviewer.ProjectManager.getInstance().getProjects();
+		TreeSet<VPTProject> projects = new TreeSet<VPTProject>(new Sorter());
+		projects.addAll(readOnlyProjects);
 		projectCombo.setModel(new DefaultComboBoxModel(projects.toArray()));
 		if (currPrj != null)
 		{
+			
 			projectCombo.setSelectedItem(currPrj);
 		}
 		vListener.resume();
