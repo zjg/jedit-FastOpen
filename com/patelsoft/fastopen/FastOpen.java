@@ -778,8 +778,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		vListener.pause();
 
+		Object selectedProject = null;
 		if (projectCombo.getItemCount() != 0)
 		{
+			selectedProject = projectCombo.getSelectedItem();
 			projectCombo.removeAllItems();
 		}
 
@@ -792,7 +794,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		projectCombo.setModel(new DefaultComboBoxModel(projects.toArray()));
 		if (currPrj != null)
 		{
-			
+            if (selectedProject != currPrj)
+                indexManager.suggestReindex();
 			projectCombo.setSelectedItem(currPrj);
 		}
 		vListener.resume();
