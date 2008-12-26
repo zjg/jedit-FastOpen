@@ -794,8 +794,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		projectCombo.setModel(new DefaultComboBoxModel(projects.toArray()));
 		if (currPrj != null)
 		{
-            if (selectedProject != currPrj)
-                indexManager.suggestReindex();
+			if (selectedProject != currPrj)
+				indexManager.suggestReindex();
 			projectCombo.setSelectedItem(currPrj);
 		}
 		vListener.resume();
