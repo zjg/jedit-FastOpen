@@ -45,6 +45,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.GUIUtilities;
@@ -372,7 +373,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	public JPanel showPanel() {
 		return new WrapFast(this);
 	}
-	
+
 	/**
 	 *
 	 * @return A JDialog enclosing the FastOpen panel.
@@ -613,15 +614,19 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		try
 		{
-			return txtfilename.getDocument().getText(0,txtfilename.getDocument().getLength());
-		}
+			Document d = txtfilename.getDocument();
+			return d.getText(0,d.getLength());
 
+		}
 		catch (BadLocationException e)
 		{
 			Log.log(Log.DEBUG, this.getClass(),
 				"Caught BadLocationException. Returning.");
 		}
-
+		catch (Exception e)
+		{
+			Log.log(Log.WARNING, this, "Caught " + e.getMessage());
+		}
 		return null;
 	}
 
@@ -1213,7 +1218,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				// pv.setProject(projectviewer.ProjectManager.getInstance().getProject(newProject));
 				// pv.setProject(newProject);
 				// pv.setActiveNode(view,newProject);
-				mainWindow.toFront();
+				if (mainWindow != null)
+				    mainWindow.toFront();
 				/* when PV is updating itself, FO loses focus. Hopefully this
 				   call should work in some jdk/platforms if implemented properly
 				   by the platform's jdk. */
@@ -1478,7 +1484,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	/**
 	 * A FastOpen JPanel wrapper that also handles default focus events for FastOpen.
-	 * 
+	 *
 	 */
 	static class WrapFast extends JPanel implements DefaultFocusComponent {
 		FastOpen mF;
@@ -1491,7 +1497,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				mF.mainWindow = null;
 			}
 			add(mF, BorderLayout.CENTER);
-			
+
 		}
 		public void focusOnDefaultComponent()
 		{
