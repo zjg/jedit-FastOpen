@@ -36,9 +36,11 @@
 
 	<property name="jedit.install.dir"  value=".."/>
 	<property name="jedit.jars.dir"  value="${jedit.install.dir}/jars"/>
+   <property name="jedit.plugins.dir" value="${install.dir}" />
+
 
 	<path id="project.class.path">
-		<pathelement location="${jedit.jars.dir}/ProjectViewer.jar"/>
+		<pathelement location="${jedit.plugins.dir}/ProjectViewer.jar"/>
 		<pathelement location="${jedit.install.dir}/jedit.jar"/>
 	</path>
 
@@ -65,8 +67,8 @@
 
 
 	<target name="dist" depends="compile">
-		<!-- <mkdir dir="${install.dir}"/> -->
-		<jar jarfile="${jedit.jars.dir}/${jar.name}">
+		<mkdir dir="${install.dir}"/>
+		<jar jarfile="${install.dir}/${jar.name}">
 			<fileset dir="${build.dir}"/>
 			<fileset dir="${src.dir}">
 				<include name="actions.xml"/>
