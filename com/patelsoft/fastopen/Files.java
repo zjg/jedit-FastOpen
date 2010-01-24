@@ -9,6 +9,7 @@ import org.gjt.sp.jedit.BufferHistory;
 import org.gjt.sp.jedit.View;
 import org.gjt.sp.util.Log;
 
+import projectviewer.vpt.VPTNode;
 import projectviewer.vpt.VPTProject;
 // import projectviewer.*;
 // import projectviewer.config.*;
@@ -106,49 +107,49 @@ public class Files
 	{
 		if(isPVThere() && atleatOneProject(view))
 		{
-                    //Loop until project is loaded
-                    while(!isProjectLoaded(getCurrentProject(view).getName()))
-                    {
-                        try
-                        {
-                            Thread.sleep(5000);
-                        }
-                        catch(InterruptedException e)
-                        {}
-                    }
-			//Iterator iter = ((projectviewer.vpt.VPTProject)getCurrentProject(view)).getOpenableNodes().iterator();
-                        Log.log(Log.DEBUG,this,"Got project " + getCurrentProject(view));
-						Collection nodes = (getCurrentProject(view)).getOpenableNodes();
-						//synchronized(nodes)
-						//{
-							Iterator iterPrj = nodes.iterator();
-							while(iterPrj.hasNext())
-							{
-									projectviewer.vpt.VPTFile file = (projectviewer.vpt.VPTFile)iterPrj.next();
-									/*boolean exists = false;
-									Iterator iterAllFiles = allFiles.iterator();
-									while(iterAllFiles.hasNext())
-									{
-											FastOpenFile fofile = (FastOpenFile)iterAllFiles.next();
-											if(fofile.equals(file))
-											{
-													exists = true;
-													break;
-											}
-									}
-
-									if(!exists)
-									{*/
-											FastOpenFile fofile = new FastOpenFile(file);
-											boolean added = allFiles.add(fofile);
-											if(!added) //Means hashcode is same but status is different
-											{
-													allFiles.remove(fofile); //Removes the old duplicate class as per FOFile's hashCode impl.
-													allFiles.add(fofile);
-											}
-									/* } */
-							}
-						//}//End of Synchronized
+			//Loop until project is loaded
+			while(!isProjectLoaded(getCurrentProject(view).getName()))
+			{
+				try
+				{
+					Thread.sleep(5000);
+				}
+				catch(InterruptedException e)
+				{}
+			}
+			VPTProject project;
+			boolean projectReady = false;
+			do
+			{
+				project = getCurrentProject(view);
+				if ((project != null) && (project.tryLock()))
+					projectReady = true;
+				else
+				{
+					try
+					{
+						Thread.sleep(5000);
+					}
+					catch(InterruptedException e)
+					{}
+				}
+			}
+			while(!projectReady);
+			Log.log(Log.DEBUG,this,"Got project " + getCurrentProject(view));
+			Collection<VPTNode> nodes = project.getOpenableNodes();
+			Iterator<VPTNode> iterPrj = nodes.iterator();
+			while(iterPrj.hasNext())
+			{
+				projectviewer.vpt.VPTFile file = (projectviewer.vpt.VPTFile)iterPrj.next();
+				FastOpenFile fofile = new FastOpenFile(file);
+				boolean added = allFiles.add(fofile);
+				if(!added) //Means hashcode is same but status is different
+				{
+						allFiles.remove(fofile); //Removes the old duplicate class as per FOFile's hashCode impl.
+						allFiles.add(fofile);
+				}
+			}
+			project.unlock();
 		}
 	}//End of prjFile2FOFile
 	
