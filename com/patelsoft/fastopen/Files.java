@@ -117,25 +117,8 @@ public class Files
 				catch(InterruptedException e)
 				{}
 			}
-			VPTProject project;
-			boolean projectReady = false;
-			do
-			{
-				project = getCurrentProject(view);
-				if ((project != null) && (project.tryLock()))
-					projectReady = true;
-				else
-				{
-					try
-					{
-						Thread.sleep(5000);
-					}
-					catch(InterruptedException e)
-					{}
-				}
-			}
-			while(!projectReady);
-			Log.log(Log.DEBUG,this,"Got project " + getCurrentProject(view));
+			VPTProject project = getCurrentProject(view);
+			Log.log(Log.DEBUG,this,"Got project " + project);
 			Collection<VPTNode> nodes = project.getOpenableNodes();
 			Iterator<VPTNode> iterPrj = nodes.iterator();
 			while(iterPrj.hasNext())
@@ -149,7 +132,6 @@ public class Files
 						allFiles.add(fofile);
 				}
 			}
-			project.unlock();
 		}
 	}//End of prjFile2FOFile
 	
