@@ -632,7 +632,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	private void gotoLine(final int lineNo)
 	{
-		VFSManager.runInAWTThread(new Runnable()
+		//VFSManager.runInAWTThread(new Runnable()
+		VFSManager.runInWorkThread(new Runnable()
 		{
 			public void run()
 			{
