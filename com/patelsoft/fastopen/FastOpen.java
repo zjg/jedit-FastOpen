@@ -58,6 +58,7 @@ import org.gjt.sp.jedit.gui.DockableWindowManager;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.util.Log;
+import org.gjt.sp.util.StandardUtilities;
 
 import projectviewer.vpt.VPTProject;
 
@@ -955,11 +956,11 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				{
 					if (jEdit.getBooleanProperty("fastopen.ignorecase"))
 					{
-						re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind),Pattern.CASE_INSENSITIVE);
+						re = Pattern.compile(StandardUtilities.globToRE("^" + fileToFind),Pattern.CASE_INSENSITIVE);
 					}
 					else
 					{
-						re = Pattern.compile(MiscUtilities.globToRE("^" + fileToFind));
+						re = Pattern.compile(StandardUtilities.globToRE("^" + fileToFind));
 					}
 				}
 				catch(java.util.regex.PatternSyntaxException e)
