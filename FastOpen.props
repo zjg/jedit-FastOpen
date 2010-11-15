@@ -1,7 +1,7 @@
 #name=value
 plugin.com.patelsoft.fastopen.FastOpenPlugin.name=Fast Open
 plugin.com.patelsoft.fastopen.FastOpenPlugin.author=Jiger Patel
-plugin.com.patelsoft.fastopen.FastOpenPlugin.version=2.2
+plugin.com.patelsoft.fastopen.FastOpenPlugin.version=2.3
 plugin.com.patelsoft.fastopen.FastOpenPlugin.docs=docs/index.html
 
 # new to 4.3pre7
