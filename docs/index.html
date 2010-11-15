@@ -65,6 +65,15 @@ You can also color annotate Open files to identify or differentiate between open
 <p>In one typical usage scenario, there is frequent access to files and relatively less jumping around projects. FastOpen has changed its internals to adopt the popular indexing method. Instead of querying the sources(Project Viewer, Open buffers etc) EACH time, it simply pulls the files and maintains an index and only re-polls after a configurable(via Global Options) second timeout. Thus you can configure how frequent you want FastOpen to load the new file list depending on your usage pattern. Users wishing to NOT use the Polling Index Manager can switch to the old behaviour(query each time) by setting &quot;fastopen.indexing.strategy&quot; property to &quot;simple&quot;. To switch back set the property to &quot;polling&quot;.</p>
 
 <a name="releasenotes"></a>
+
+<h3 id="version2.3">Release Notes &amp; Change Log for Version : 2.3 (????) </h3>
+<p> <b> Requirements: </b>
+Jdk 1.5+, JEdit 4.3+, ProjectViewer 3.0.1+ </p>
+<ol>
+<li> Run in work thread instead of AWT thread to avoid deadlocks. </li>
+<li> Updates to ProjectViewer 3 API. </li>
+</ol>
+
 <h3 id="version2.2">Release Notes &amp; Change Log for Version : 2.2 (July 29 2009) </h3>
 <p> <b> Requirements: </b>
 Jdk 1.5+, JEdit 4.3pre17+, ProjectViewer 2.9(SVN) </p>
