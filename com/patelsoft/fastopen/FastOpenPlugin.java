@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
@@ -37,7 +38,7 @@ import org.gjt.sp.util.Log;
 public class FastOpenPlugin extends EditPlugin
 {
 	public final static String NAME = "fastopen";
-	static Hashtable viewsToFastOpen = new Hashtable(5);
+	static Hashtable<Window, FastOpen> viewsToFastOpen = new Hashtable<Window, FastOpen>(5);
 
 	public final static String OPEN_FILES_FIRST = "OPEN_FILES_FIRST";
 	public final static String OPEN_FILES_LAST ="OPEN_FILES_LAST";
@@ -52,7 +53,7 @@ public class FastOpenPlugin extends EditPlugin
 
 	public void stop()
 	{
-		Enumeration iter = viewsToFastOpen.keys();
+		Enumeration<Window> iter = viewsToFastOpen.keys();
 		while(iter.hasMoreElements())
 		{
 			View v = (View)iter.nextElement();
@@ -68,19 +69,6 @@ public class FastOpenPlugin extends EditPlugin
 	 */
 	public static FastOpen getFastOpenInstance(View view)
 	{
-		/*DockableWindowManager dwm = view.getDockableWindowManager();
-		FastOpen fopen = null;
-		if (dwm != null) {
-			fopen = (FastOpen) dwm.getDockable("fastopen");
-		}
-		if (fopen == null)
-		{
-			fopen = new FastOpen(view);
-			viewsToFastOpen.put(view,fopen);
-			view.addWindowListener(wa);
-		}*/
-		
-		/*The above code should not be used. It creates multiple FastOpen objects per invocation of FO window. The correct way is to lookup viewsToFastOpen map and use it as done below.*/
 		FastOpen fopen = (FastOpen)viewsToFastOpen.get(view);
 		if (fopen == null)
 		{
@@ -91,41 +79,18 @@ public class FastOpenPlugin extends EditPlugin
 		return fopen;
 	}
 
-	/* public void createMenuItems(Vector menuItems)
-{
-		menuItems.addElement(GUIUtilities.loadMenuItem("fastopen.show"));
-}
-
-	public void createOptionPanes(OptionsDialog dialog)
-{
-		dialog.addOptionPane(new FastOpenOptionPane());
-} */
-
-
-	/* public void handleMessage(EBMessage ebmess)
-	   {
-	    if (ebmess instanceof ViewUpdate)
-	    {
-	        ViewUpdate vu = (ViewUpdate)ebmess;
-	        if (((ViewUpdate)ebmess).getWhat() == ViewUpdate.CLOSED)
-	        {
-	            FastOpen fopen =(FastOpen)viewsToFastOpen.remove(vu.getView());
-	            if(fopen != null)
-	            {
-	                fopen.killWindow();
-	                System.gc();
-	            }
-	        }
-	        else if (((ViewUpdate)ebmess).getWhat() == ViewUpdate.CREATED)
-	        {
-	            getFastOpenInstance(vu.getView());
-	        }
-	    }
-	      }
-	*/
-
+	@SuppressWarnings("serial")
 	public static class FastOpenOptionPane extends AbstractOptionPane
 	{
+		private static final String FASTOPEN_INDEXING_FREQ = "fastopen.indexing.freq";
+		private static final String FASTOPEN_NON_PRJ_OPEN_FILES_FOREGROUND_COLOR = "fastopen.nonprjOpenFiles.foregroundcolor";
+		private static final String FASTOPEN_OPEN_FILES_FOREGROUND_COLOR = "fastopen.openFiles.foregroundcolor";
+		private static final String FASTOPEN_FILES_ORDER = "fastopen.filesOrder";
+		private static final String FASTOPEN_SHOW_RECENT_FILES = "fastopen.showrecentfiles";
+		private static final String FASTOPEN_PATTERN_FROM_SELECTED_TEXT = "fastopen.patternFromSelectedText";
+		private static final String FASTOPEN_IGNORE_CASE = "fastopen.ignorecase";
+		private static final String FASTOPEN_HIDE_OPEN_FILES = "fastopen.hideOpenFiles";
+		private static final String FASTOPEN_SORT_FILES = "fastopen.sortFiles";
 		JCheckBox chkSort,chkDontShowOpenFiles,chkIgnoreCase,chkPattFromSelectedText, chkShowRecentFiles;
 		JRadioButton radioOpenFilesFirst,radioOpenFilesLast,radioNoPref;
 		ButtonGroup bg = new ButtonGroup();
@@ -155,7 +120,7 @@ public class FastOpenPlugin extends EditPlugin
 			indexingFreq = new JSlider(5,300);//Seconds. 5 sec. to 5 min. anything above this would be useless.
 			indexingFreq.setPaintLabels(true);
 			indexingFreq.setPaintLabels(true);
-			Dictionary tables = new Hashtable();
+			Dictionary<Integer, JLabel> tables = new Hashtable<Integer, JLabel>();
 			tables.put(new Integer(5),new JLabel("5 sec."));
 			tables.put(new Integer(60),new JLabel("1 min."));
 			tables.put(new Integer(120),new JLabel("2 min."));
@@ -233,9 +198,6 @@ public class FastOpenPlugin extends EditPlugin
 			panel.add(pnlRadios);
 
 			//Setup Color Component
-			/* FastOpenColorRenderer forend = new FastOpenColorRenderer();
-				forend.addColor("FastOpen.openFiles.foregroundcolor","Open Files Color",FastOpen.openFilesForeground);
-				forend.addColor("FastOpen.nonprjOpenFiles.foregroundcolor","Non-Project files Color",FastOpen.nonprjopenFilesForeground); */
 
 			btnOpenFilesColor = new ColorWellButton(FastOpen.openFilesForeground);
 			panelColors.add(new JLabel("Open files Foreground :"));
@@ -253,70 +215,46 @@ public class FastOpenPlugin extends EditPlugin
 			panel.add(pnlslider);
 			panel.add(pnldelay);
 			addComponent(panel);
-		}
 
-		public void init()
-		{
-			System.out.println("Init called");
-			super.init();
-			chkSort.setSelected(jEdit.getBooleanProperty("fastopen.sortFiles"));
-
-			enableDisableChildren(radioOpenFilesFirst.getParent(), jEdit.getBooleanProperty("fastopen.sortFiles"));
-
-			chkDontShowOpenFiles.setSelected(jEdit.getBooleanProperty("fastopen.hideOpenFiles"));
-			if(jEdit.getProperty("fastopen.ignorecase") == null)
-			{
-				jEdit.setBooleanProperty("fastopen.ignorecase", true);
-			}
-			chkIgnoreCase.setSelected(jEdit.getBooleanProperty("fastopen.ignorecase"));
-			chkPattFromSelectedText.setSelected(jEdit.getBooleanProperty("fastopen.patternFromSelectedText"));
-			chkShowRecentFiles.setSelected(jEdit.getBooleanProperty("fastopen.showrecentfiles", true));
-			Enumeration enumElements =bg.getElements();
+			// Set initial component values
+			chkSort.setSelected(jEdit.getBooleanProperty(FASTOPEN_SORT_FILES));
+			enableDisableChildren(radioOpenFilesFirst.getParent(), jEdit.getBooleanProperty(FASTOPEN_SORT_FILES));
+			chkDontShowOpenFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_HIDE_OPEN_FILES));
+			chkIgnoreCase.setSelected(jEdit.getBooleanProperty(FASTOPEN_IGNORE_CASE, true));
+			chkPattFromSelectedText.setSelected(jEdit.getBooleanProperty(FASTOPEN_PATTERN_FROM_SELECTED_TEXT));
+			chkShowRecentFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_SHOW_RECENT_FILES, true));
+			Enumeration<AbstractButton> enumElements =bg.getElements();
 			while(enumElements.hasMoreElements())
 			{
 				AbstractButton btn  = (AbstractButton)enumElements.nextElement();
-				if (btn.getActionCommand().equals(jEdit.getProperty("fastopen.filesOrder")))
-				{
+				if (btn.getActionCommand().equals(jEdit.getProperty(FASTOPEN_FILES_ORDER)))
 					btn.setSelected(true);
-				}
 			}
-
-			indexingFreq.setValue(jEdit.getIntegerProperty("fastopen.indexing.freq",10));//10 sec. default.
-
+			indexingFreq.setValue(jEdit.getIntegerProperty(FASTOPEN_INDEXING_FREQ,10));//10 sec. default.
 			txtdelay.setValue(new Double(jEdit.getDoubleProperty("fastopen.search.delay",2)));//1 sec. default.
 		}
 
-		public void save()
+		protected void _save()
 		{
-			if(chkSort != null) //Hack becoz jedit calls init only if the plugin option is selected but calls save irrespective of option selection. Funny but true.
-			{
-				jEdit.setBooleanProperty("fastopen.sortFiles",chkSort.isSelected());
-				jEdit.setBooleanProperty("fastopen.hideOpenFiles",chkDontShowOpenFiles.isSelected());
-				jEdit.setBooleanProperty("fastopen.ignorecase",chkIgnoreCase.isSelected());
-				jEdit.setBooleanProperty("fastopen.patternFromSelectedText",chkPattFromSelectedText.isSelected());
-				jEdit.setBooleanProperty("fastopen.showrecentfiles",chkShowRecentFiles.isSelected());
-				jEdit.setProperty("fastopen.filesOrder",bg.getSelection().getActionCommand());
-				jEdit.setColorProperty("fastopen.openFiles.foregroundcolor",btnOpenFilesColor.getSelectedColor());
-				jEdit.setColorProperty("fastopen.nonprjOpenFiles.foregroundcolor",btnNonPrjFilesColor.getSelectedColor());
-				jEdit.setIntegerProperty("fastopen.indexing.freq",indexingFreq.getValue());
+			jEdit.setBooleanProperty(FASTOPEN_SORT_FILES,chkSort.isSelected());
+			jEdit.setBooleanProperty(FASTOPEN_HIDE_OPEN_FILES,chkDontShowOpenFiles.isSelected());
+			jEdit.setBooleanProperty(FASTOPEN_IGNORE_CASE,chkIgnoreCase.isSelected());
+			jEdit.setBooleanProperty(FASTOPEN_PATTERN_FROM_SELECTED_TEXT,chkPattFromSelectedText.isSelected());
+			jEdit.setBooleanProperty(FASTOPEN_SHOW_RECENT_FILES,chkShowRecentFiles.isSelected());
+			jEdit.setProperty(FASTOPEN_FILES_ORDER,bg.getSelection().getActionCommand());
+			jEdit.setColorProperty(FASTOPEN_OPEN_FILES_FOREGROUND_COLOR,btnOpenFilesColor.getSelectedColor());
+			jEdit.setColorProperty(FASTOPEN_NON_PRJ_OPEN_FILES_FOREGROUND_COLOR,btnNonPrjFilesColor.getSelectedColor());
+			jEdit.setIntegerProperty(FASTOPEN_INDEXING_FREQ,indexingFreq.getValue());
 
-				double delay = 2.0;
+			double delay = 2.0;
+			if(txtdelay.getValue() instanceof Double)
+				delay = ((Double)txtdelay.getValue()).doubleValue();
+			else if(txtdelay.getValue() instanceof Integer)
+				delay = ((Integer)txtdelay.getValue()).doubleValue();
+			jEdit.setDoubleProperty("fastopen.search.delay",delay);
 
-				if(txtdelay.getValue() instanceof Double)
-				{
-					delay = ((Double)txtdelay.getValue()).doubleValue();
-				}
-				else if(txtdelay.getValue() instanceof Integer)
-				{
-					delay = ((Integer)txtdelay.getValue()).doubleValue();
-				}
-
-
-				jEdit.setDoubleProperty("fastopen.search.delay",delay);
-				FastOpen.openFilesForeground = btnOpenFilesColor.getSelectedColor();
-				FastOpen.nonprjopenFilesForeground = btnNonPrjFilesColor.getSelectedColor();
-			}
-
+			FastOpen.openFilesForeground = btnOpenFilesColor.getSelectedColor();
+			FastOpen.nonprjopenFilesForeground = btnNonPrjFilesColor.getSelectedColor();
 		}//End of save
 
 
