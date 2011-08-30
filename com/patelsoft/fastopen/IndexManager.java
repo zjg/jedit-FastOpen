@@ -8,10 +8,9 @@ import java.util.Set;
 *	@created 14/Dec/2004
 */
 
-
 public interface IndexManager
 {
-	public Set getCollectedFiles();
+	public Set<FastOpenFile> getCollectedFiles();
 	public void stop();
 	public void suggestReindex();
 	public void addIndexListener(IndexListener listener);

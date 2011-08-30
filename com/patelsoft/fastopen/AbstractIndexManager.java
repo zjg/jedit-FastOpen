@@ -15,8 +15,8 @@ public abstract class AbstractIndexManager implements IndexManager
 {
 	Files files;
 	View view;
-	Set allfiles;
-	List listeners;
+	Set<FastOpenFile> allfiles;
+	List<IndexListener> listeners;
 	protected final int INDEXING_STARTED=1;
 	protected final int INDEXING_COMPLETED=2;
 
@@ -30,8 +30,8 @@ public abstract class AbstractIndexManager implements IndexManager
 		super();
 		this.view = view;
 		this.files = files;
-		allfiles = new HashSet(1,1.0f);
-		listeners = new ArrayList();
+		allfiles = new HashSet<FastOpenFile>(1,1.0f);
+		listeners = new ArrayList<IndexListener>();
 	}//End of constructor
 
 	/**
@@ -39,23 +39,15 @@ public abstract class AbstractIndexManager implements IndexManager
 	*/
 	protected void queryFilesFromSource()
 	{
-		//System.out.println("Inside queryFilesFromSource allfiles size " + allfiles.size());
 		notifyListeners(INDEXING_STARTED);
-		Set tmp_set = new HashSet(20,1.0f);
+		Set<FastOpenFile> tmp_set = new HashSet<FastOpenFile>(20,1.0f);
 		if(allfiles != null && allfiles.size() > 0)
-		{
 			tmp_set.addAll(allfiles);
-		}
-		//boolean hideOpenFiles = jEdit.getBooleanProperty("fastopen.hideOpenFiles");
-		//start = System.currentTimeMillis();
 		files.prjFile2FOFile(view,tmp_set);
-
 		files.diffPrjFilesWithOpenBuffers(jEdit.getBuffers(),view, tmp_set);
 
 		if(jEdit.getBooleanProperty("fastopen.showrecentfiles"))
-		{
 			files.getRecentFiles(tmp_set);
-		}
 
 		allfiles = tmp_set;
 		notifyListeners(INDEXING_COMPLETED);
@@ -65,36 +57,32 @@ public abstract class AbstractIndexManager implements IndexManager
 	public void addIndexListener(IndexListener listener)
 	{
 		if(listener != null)
-		{
 			listeners.add(listener);
-		}
 	}
 
 	public void removeIndexListener(IndexListener listener)
 	{
 		if(listener != null)
-		{
 			listeners.remove(listener);
-		}
 	}
 
 	public void notifyListeners(int activity)
 	{
 		if(activity == INDEXING_STARTED)
 		{
-			Iterator iterListeners = listeners.iterator();
+			Iterator<IndexListener> iterListeners = listeners.iterator();
 			while(iterListeners.hasNext())
 			{
-				IndexListener listener = (IndexListener)iterListeners.next();
+				IndexListener listener = iterListeners.next();
 				listener.indexingStarted(this);
 			}
 		}
 		else if(activity == INDEXING_COMPLETED)
 		{
-			Iterator iterListeners = listeners.iterator();
+			Iterator<IndexListener> iterListeners = listeners.iterator();
 			while(iterListeners.hasNext())
 			{
-				IndexListener listener = (IndexListener)iterListeners.next();
+				IndexListener listener = iterListeners.next();
 				listener.indexingCompleted(this);
 			}
 		}

@@ -19,7 +19,6 @@ public class PollingIndexManager extends AbstractIndexManager implements Runnabl
 
 	/**
 	*	Constructor for PollingIndexManager
-	*
 	*/
 	public PollingIndexManager(View view, Files files)
 	{
@@ -33,7 +32,6 @@ public class PollingIndexManager extends AbstractIndexManager implements Runnabl
 
 	public void run()
 	{
-		//Thread.yield();//Runs only the first time!! So that FastOpen Main window gets chance to show
 		while(!interrupted)
 		{
 			try
@@ -60,11 +58,10 @@ public class PollingIndexManager extends AbstractIndexManager implements Runnabl
 		queryFilesFromSource();
 		long end = System.currentTimeMillis();
 		Log.log(Log.MESSAGE, this, "Polling Thread ran and collected "+(allfiles != null? allfiles.size():0) + " files in " + (end-start)/1000 +" secs");
-		//System.out.println("Total files collected " + allfiles.size());
 		collecting = false;
 	}
 
-	public Set getCollectedFiles()
+	public Set<FastOpenFile> getCollectedFiles()
 	{
 		return allfiles;
 	}

@@ -7,6 +7,7 @@ import javax.swing.KeyStroke;
 
 import org.gjt.sp.jedit.gui.HistoryTextField;
 
+@SuppressWarnings("serial")
 public class FastOpenTextField extends HistoryTextField
 {
 	/**

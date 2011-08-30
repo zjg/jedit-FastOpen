@@ -157,7 +157,6 @@ public class FastOpenPlugin extends EditPlugin
 			JPanel panel = new JPanel(new GridLayout(5,1));
 			JPanel panelChk = new JPanel(new GridLayout(0,3));
 			JPanel panelColors = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			//final JPanel pnlRadios = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			final JPanel pnlRadios = new JPanel(new GridLayout(0,3));
 			pnlRadios.setBorder(new EtchedBorder());
 			JPanel pnlslider = new JPanel(new BorderLayout());
@@ -265,9 +264,7 @@ public class FastOpenPlugin extends EditPlugin
 			Component[] components = container.getComponents();
 			// for each element in the container enable/disable it
 			for (int i = 0; i < components.length; i++)
-			{
 				components[i].setEnabled(isEnabled);
-			}
 		}
 	} //End of FastOpenOptionPane
 

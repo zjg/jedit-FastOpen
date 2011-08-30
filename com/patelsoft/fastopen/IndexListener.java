@@ -7,7 +7,6 @@ package com.patelsoft.fastopen;
 *	@created 19/Apr/2005
 */
 
-
 public interface IndexListener
 {
 	public void indexingStarted(IndexManager manager);
