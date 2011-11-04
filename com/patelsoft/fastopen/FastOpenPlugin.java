@@ -37,20 +37,21 @@ import org.gjt.sp.util.Log;
 
 public class FastOpenPlugin extends EditPlugin
 {
-	public final static String NAME = "fastopen";
+	public static final String NAME = "fastopen";
 	static Hashtable<Window, FastOpen> viewsToFastOpen = new Hashtable<Window, FastOpen>(5);
 
-	public final static String OPEN_FILES_FIRST = "OPEN_FILES_FIRST";
-	public final static String OPEN_FILES_LAST ="OPEN_FILES_LAST";
-	public final static String OPEN_FILES_NOPREF =null;
+	public static final String OPEN_FILES_FIRST = "OPEN_FILES_FIRST";
+	public static final String OPEN_FILES_LAST ="OPEN_FILES_LAST";
+	public static final String OPEN_FILES_NOPREF =null;
 	static WindowAdapter wa;
 
+	@Override
 	public void start()
 	{
 		wa = new FastOpenWindowAdapter();
-		super.start();
 	}
 
+	@Override
 	public void stop()
 	{
 		Enumeration<Window> iter = viewsToFastOpen.keys();
@@ -60,7 +61,6 @@ public class FastOpenPlugin extends EditPlugin
 			v.removeWindowListener(wa);
 		}
 		viewsToFastOpen.clear();
-		super.stop();
 	}
 
 	/**
@@ -103,6 +103,7 @@ public class FastOpenPlugin extends EditPlugin
 			super(NAME);
 		}
 
+		@Override
 		protected void _init()
 		{
 			chkSort = new JCheckBox("Sort Files");
@@ -121,16 +122,16 @@ public class FastOpenPlugin extends EditPlugin
 			indexingFreq.setPaintLabels(true);
 			indexingFreq.setPaintLabels(true);
 			Dictionary<Integer, JLabel> tables = new Hashtable<Integer, JLabel>();
-			tables.put(new Integer(5),new JLabel("5 sec."));
-			tables.put(new Integer(60),new JLabel("1 min."));
-			tables.put(new Integer(120),new JLabel("2 min."));
-			tables.put(new Integer(180),new JLabel("3 min."));
-			tables.put(new Integer(240),new JLabel("4 min."));
-			tables.put(new Integer(300),new JLabel("5 min."));
+			tables.put(5,new JLabel("5 sec."));
+			tables.put(60,new JLabel("1 min."));
+			tables.put(120,new JLabel("2 min."));
+			tables.put(180,new JLabel("3 min."));
+			tables.put(240,new JLabel("4 min."));
+			tables.put(300,new JLabel("5 min."));
 
 			indexingFreq.setLabelTable(tables);
 
-			final JLabel freqVal = new JLabel(indexingFreq.getValue() +"");
+			final JLabel freqVal = new JLabel(String.valueOf(indexingFreq.getValue()));
 			// Register a change listener
 			indexingFreq.addChangeListener(new ChangeListener(){
 				// This method is called whenever the slider's value is changed
@@ -233,6 +234,7 @@ public class FastOpenPlugin extends EditPlugin
 			txtdelay.setValue(new Double(jEdit.getDoubleProperty("fastopen.search.delay",2)));//1 sec. default.
 		}
 
+		@Override
 		protected void _save()
 		{
 			jEdit.setBooleanProperty(FASTOPEN_SORT_FILES,chkSort.isSelected());
@@ -268,9 +270,10 @@ public class FastOpenPlugin extends EditPlugin
 		}
 	} //End of FastOpenOptionPane
 
-	class FastOpenWindowAdapter extends WindowAdapter
+	static class FastOpenWindowAdapter extends WindowAdapter
 	{
 		//We add view listener to prevent FO to extend from EBPlugin
+		@Override
 		public void windowClosed(WindowEvent evt)
 		{
 			//Log.log(Log.DEBUG,this.getClass(),"Removing FO instance on View close");
