@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+    <info organisation="jedit-plugins" module="FastOpen"/>
+    <dependencies>
+        	<dependency org="jedit-plugins" name="ProjectViewer" rev="3.0.1"/>
+    </dependencies>
+</ivy-module>
