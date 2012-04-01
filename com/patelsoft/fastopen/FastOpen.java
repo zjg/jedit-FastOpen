@@ -75,6 +75,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	private FastOpenTextField txtfilename;
 	private JList jlist;
 
+	private String searchString = null;
 	// List _foundfileslist;
 	private JDialog mainWindow = null;
 	private JComboBox projectCombo;
@@ -114,51 +115,68 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		setupFastOpen();
 	}// End of FastOpen constructor
 
+	/** 
+	 * Invoke FastOpen with a pre-supplied string to search for instead of possibly searching
+	 * for something under the cursor. 
+	 * 
+	 * @param view the view to search
+	 * @param someString something to search for
+	 */
+	public FastOpen(View view, String someString)
+	{
+		this(view);
+		this.searchString = someString;
+		
+	}
+	
 	/**
 	 * This method gets called whenever our component gets focus.
 	 */
 	public void focusOnDefaultComponent()
 	{
+		
+		String txtSelection = this.searchString;
 		if (jEdit.getBooleanProperty("fastopen.patternFromSelectedText"))
+		{ 					
+			if (txtSelection == null) txtSelection = getFileAtCaret();
+		}
+		int lineNumber = -1;
+		try {
+			List<Object> vecContent = parseFileLnoPattern(txtSelection);
+			lineNumber = ((Integer) vecContent.get(1)).intValue();
+		}
+		catch (NullPointerException npe)
 		{
-			String txtSelection = getFileAtCaret();
-			int lineNumber = -1;
-			try {
-				List<Object> vecContent = parseFileLnoPattern(txtSelection);
-				lineNumber = ((Integer) vecContent.get(1)).intValue();
-			}
-			catch (NullPointerException npe)
+			/* There is no line number there */
+		}
+
+		if (txtSelection != null)
+		{
+			// Only run the Algo if the input filename does not contain newline characters.
+			if (txtSelection.indexOf("\n") == -1) 
 			{
-				/* There is no line number there */
+				FastOpenFile matchingfiles[] = retrieveMatchingFiles(txtSelection);
+
+				if (matchingfiles != null && matchingfiles.length == 1)
+				{
+					/* Only one matching file so don't show the mainWindow */
+					openFile((FastOpenFile) matchingfiles[0]);
+					if (lineNumber != -1)
+						gotoLine(lineNumber);
+					closeMainWindow();
+					return;
+				}
+
+				txtfilename.setText((txtSelection == null ? null : txtSelection.trim()));
 			}
-
-			if (txtSelection != null)
+			else
 			{
-				// Only run the Algo if the input filename does not contain newline characters.
-				if (txtSelection.indexOf("\n") == -1) 
-				{
-					FastOpenFile matchingfiles[] = retrieveMatchingFiles(txtSelection);
-
-					if (matchingfiles != null && matchingfiles.length == 1)
-					{
-						/* Only one matching file so don't show the mainWindow */
-						openFile((FastOpenFile) matchingfiles[0]);
-						if (lineNumber != -1)
-							gotoLine(lineNumber);
-						closeMainWindow();
-						return;
-					}
-
-					txtfilename.setText((txtSelection == null ? null : txtSelection.trim()));
-				}
-				else
-				{
-					view.getStatus().setMessageAndClear(
-						"FastOpen ignored long text exceeding 50 characters as useful search criteria.");
-					txtfilename.setText("");
-				}
+				view.getStatus().setMessageAndClear(
+					"FastOpen ignored long text exceeding 50 characters as useful search criteria.");
+				txtfilename.setText("");
 			}
 		}
+		
 		if (files.isPVThere())
 			loadProjectsInCombo();
 
@@ -442,6 +460,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		}
 	}
 
+	/** Checks the contents of the "filename" text field, and searches for it in the index */
 	void findfile()
 	{
 		if (!initialIndexingInProgress)
@@ -503,6 +522,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		return buf;
 	}
 
+	/** @return the contents of the txtfilename input field, or null */
 	private String getFilePattern()
 	{
 		try
@@ -541,8 +561,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		return pf.open(this.view);
 	}
 
-	/**
-	 * Gets the fileAtCaret attribute of the FastOpen object
+	/** Gets the fileAtCaret attribute of the FastOpen object
 	 * @return The fileAtCaret value
 	 */
 	private String getFileAtCaret()
@@ -614,20 +633,24 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		vListener.resume();
 	}
 
-	public FastOpenFile[] retrieveMatchingFiles(String fileToFind)
+	/**  Search the fastopen index for files that match a glob
+	 *   @param globToFind a filename "glob" for searching the fastopen index 
+	 *   @return an array of FastOpenFile, size 0 or more, containing matching files in the index 
+	 **/
+	public FastOpenFile[] retrieveMatchingFiles(String globToFind)
 	{
 		/* We try to collect files just once and hold on to them until the user closes FO.
 		 * This reduces Object creation and hopefully increases performance.
 		 */
-		if (fileToFind != null)
+		if (globToFind != null)
 		{
 			Set<FastOpenFile> allfiles = indexManager.getCollectedFiles();
 			if (allfiles == null || allfiles.size() == 0) /* IndexManager still loading. */
 				return null;
 
-			List<Object> vecPattern = parseFileLnoPattern(fileToFind);
+			List<Object> vecPattern = parseFileLnoPattern(globToFind);
 			if (vecPattern != null)
-				fileToFind = (String) vecPattern.get(0);
+				globToFind = (String) vecPattern.get(0);
 
 			List<FastOpenFile> foundfileslist = new ArrayList<FastOpenFile>(allfiles.size());
 
@@ -639,9 +662,9 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			try
 			{
 				if (jEdit.getBooleanProperty("fastopen.ignorecase"))
-					re = Pattern.compile(StandardUtilities.globToRE("^" + fileToFind),Pattern.CASE_INSENSITIVE);
+					re = Pattern.compile(StandardUtilities.globToRE("^" + globToFind),Pattern.CASE_INSENSITIVE);
 				else
-					re = Pattern.compile(StandardUtilities.globToRE("^" + fileToFind));
+					re = Pattern.compile(StandardUtilities.globToRE("^" + globToFind));
 			}
 			catch(java.util.regex.PatternSyntaxException e)
 			{

@@ -4,7 +4,7 @@
    <property file="build.properties"/>
    <property file="../build.properties"/>
    <property name="docs-proc.target" value="none" />
-   <property name="jar.name" value="${ant.project.name}.jar"/>
+
    <property name="version" value="${plugin.com.patelsoft.fastopen.FastOpenPlugin.version}" />
 
    <property name="src.dir" value="."/>
