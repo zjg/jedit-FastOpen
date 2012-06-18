@@ -4,7 +4,7 @@ plugin.com.patelsoft.fastopen.FastOpenPlugin.author=Jiger Patel
 plugin.com.patelsoft.fastopen.FastOpenPlugin.version=2.5
 plugin.com.patelsoft.fastopen.FastOpenPlugin.docs=docs/index.html
 
-plugin.com.patelsoft.fastopen.FastOpenPlugin.description=FastOpen is a plugin designed to quickly open any file in the currect project by just typing in the first few characters of the filename you want to open.
+plugin.com.patelsoft.fastopen.FastOpenPlugin.description=FastOpen is a plugin designed to quickly open any file in the current project by just typing in the first few characters of the filename you want to open.
 plugin.com.patelsoft.fastopen.FastOpenPlugin.longdescription=description.html
 
 #external depencies

@@ -126,7 +126,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		this(view);
 		this.searchString = someString;
-		
 	}
 	
 	/**
