@@ -85,16 +85,19 @@ public class FastOpenPlugin extends EditPlugin
 		private static final String FASTOPEN_INDEXING_FREQ = "fastopen.indexing.freq";
 		private static final String FASTOPEN_NON_PRJ_OPEN_FILES_FOREGROUND_COLOR = "fastopen.nonprjOpenFiles.foregroundcolor";
 		private static final String FASTOPEN_OPEN_FILES_FOREGROUND_COLOR = "fastopen.openFiles.foregroundcolor";
+		private static final String FASTOPEN_PATH_FG_COLOR = "fastopen.path.foregroundcolor";
 		private static final String FASTOPEN_FILES_ORDER = "fastopen.filesOrder";
 		private static final String FASTOPEN_SHOW_RECENT_FILES = "fastopen.showrecentfiles";
 		private static final String FASTOPEN_PATTERN_FROM_SELECTED_TEXT = "fastopen.patternFromSelectedText";
 		private static final String FASTOPEN_IGNORE_CASE = "fastopen.ignorecase";
 		private static final String FASTOPEN_HIDE_OPEN_FILES = "fastopen.hideOpenFiles";
 		private static final String FASTOPEN_SORT_FILES = "fastopen.sortFiles";
-		JCheckBox chkSort,chkDontShowOpenFiles,chkIgnoreCase,chkPattFromSelectedText, chkShowRecentFiles;
+		static final String FASTOPEN_SHOW_ALTERNATE_ROWS = "fastopen.showalternaterows";
+		static final String FASTOPEN_ALLOW_CAMELCASE_SEARCH = "fastopen.allowcamelcase.search";
+		JCheckBox chkSort,chkDontShowOpenFiles,chkIgnoreCase,chkPattFromSelectedText, chkShowRecentFiles, chkShowAlternateRows, chkAllowCamelCase;
 		JRadioButton radioOpenFilesFirst,radioOpenFilesLast,radioNoPref;
 		ButtonGroup bg = new ButtonGroup();
-		ColorWellButton btnOpenFilesColor, btnNonPrjFilesColor;
+		ColorWellButton btnOpenFilesColor, btnNonPrjFilesColor, btnPathFGColor;
 		JSlider indexingFreq;
 		JSpinner txtdelay;
 
@@ -107,10 +110,12 @@ public class FastOpenPlugin extends EditPlugin
 		protected void _init()
 		{
 			chkSort = new JCheckBox("Sort Files");
+			chkShowAlternateRows = new JCheckBox("Show Alternate Rows");
 			chkDontShowOpenFiles = new JCheckBox("Don't show Open files");
 			chkIgnoreCase = new JCheckBox("Ignore Case in Search",true);
 			chkPattFromSelectedText = new JCheckBox("Pattern from Selected text",true);
 			chkShowRecentFiles = new JCheckBox("Search Recent Files",true);
+			chkAllowCamelCase = new JCheckBox("Allow Camel Case Search",true);
 
 			radioOpenFilesFirst = new JRadioButton("Show open files First");
 			radioOpenFilesLast = new JRadioButton("Show open files Last");
@@ -174,6 +179,8 @@ public class FastOpenPlugin extends EditPlugin
 			panelChk.add(chkPattFromSelectedText);
 			panelChk.add(chkShowRecentFiles);
 			panelChk.add(chkSort);
+			panelChk.add(chkShowAlternateRows);
+			panelChk.add(chkAllowCamelCase);
 			panel.add(panelChk);
 
 			chkSort.addItemListener(new ItemListener()
@@ -205,6 +212,10 @@ public class FastOpenPlugin extends EditPlugin
 			btnNonPrjFilesColor = new ColorWellButton(FastOpen.nonprjopenFilesForeground);
 			panelColors.add(new JLabel("Non-Project files Foreground :"));
 			panelColors.add(btnNonPrjFilesColor);
+			
+			btnPathFGColor = new ColorWellButton(FastOpen.pathFGColor);
+			panelColors.add(new JLabel("Path Foreground :"));
+			panelColors.add(btnPathFGColor);
 
 
 			pnlslider.add(new JLabel("Indexing frequency "), BorderLayout.WEST);
@@ -218,11 +229,15 @@ public class FastOpenPlugin extends EditPlugin
 
 			// Set initial component values
 			chkSort.setSelected(jEdit.getBooleanProperty(FASTOPEN_SORT_FILES));
+			chkShowAlternateRows.setSelected(jEdit.getBooleanProperty(FASTOPEN_SHOW_ALTERNATE_ROWS, true));
+			
 			enableDisableChildren(radioOpenFilesFirst.getParent(), jEdit.getBooleanProperty(FASTOPEN_SORT_FILES));
 			chkDontShowOpenFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_HIDE_OPEN_FILES));
 			chkIgnoreCase.setSelected(jEdit.getBooleanProperty(FASTOPEN_IGNORE_CASE, true));
 			chkPattFromSelectedText.setSelected(jEdit.getBooleanProperty(FASTOPEN_PATTERN_FROM_SELECTED_TEXT));
 			chkShowRecentFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_SHOW_RECENT_FILES, true));
+			chkAllowCamelCase.setSelected(jEdit.getBooleanProperty(FASTOPEN_ALLOW_CAMELCASE_SEARCH, true));
+			
 			Enumeration<AbstractButton> enumElements =bg.getElements();
 			while(enumElements.hasMoreElements())
 			{
@@ -238,6 +253,7 @@ public class FastOpenPlugin extends EditPlugin
 		protected void _save()
 		{
 			jEdit.setBooleanProperty(FASTOPEN_SORT_FILES,chkSort.isSelected());
+			jEdit.setBooleanProperty(FASTOPEN_SHOW_ALTERNATE_ROWS,chkShowAlternateRows.isSelected());
 			jEdit.setBooleanProperty(FASTOPEN_HIDE_OPEN_FILES,chkDontShowOpenFiles.isSelected());
 			jEdit.setBooleanProperty(FASTOPEN_IGNORE_CASE,chkIgnoreCase.isSelected());
 			jEdit.setBooleanProperty(FASTOPEN_PATTERN_FROM_SELECTED_TEXT,chkPattFromSelectedText.isSelected());
@@ -245,7 +261,9 @@ public class FastOpenPlugin extends EditPlugin
 			jEdit.setProperty(FASTOPEN_FILES_ORDER,bg.getSelection().getActionCommand());
 			jEdit.setColorProperty(FASTOPEN_OPEN_FILES_FOREGROUND_COLOR,btnOpenFilesColor.getSelectedColor());
 			jEdit.setColorProperty(FASTOPEN_NON_PRJ_OPEN_FILES_FOREGROUND_COLOR,btnNonPrjFilesColor.getSelectedColor());
+			jEdit.setColorProperty(FASTOPEN_PATH_FG_COLOR,btnPathFGColor.getSelectedColor());
 			jEdit.setIntegerProperty(FASTOPEN_INDEXING_FREQ,indexingFreq.getValue());
+			jEdit.setBooleanProperty(FASTOPEN_ALLOW_CAMELCASE_SEARCH,chkAllowCamelCase.isSelected());
 
 			double delay = 2.0;
 			if(txtdelay.getValue() instanceof Double)
@@ -256,6 +274,7 @@ public class FastOpenPlugin extends EditPlugin
 
 			FastOpen.openFilesForeground = btnOpenFilesColor.getSelectedColor();
 			FastOpen.nonprjopenFilesForeground = btnNonPrjFilesColor.getSelectedColor();
+			FastOpen.pathFGColor = btnPathFGColor.getSelectedColor();
 		}//End of save
 
 

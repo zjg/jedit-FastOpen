@@ -7,6 +7,7 @@ import org.gjt.sp.jedit.jEdit;
 import org.gjt.sp.jedit.MiscUtilities;
 import org.gjt.sp.jedit.OperatingSystem;
 import org.gjt.sp.jedit.View;
+import org.gjt.sp.util.SyntaxUtilities;
 	//End of Imports
 
   /**
@@ -20,7 +21,7 @@ import org.gjt.sp.jedit.View;
 public class FastOpenFile
 {
 	private final String name,path;
-    private final boolean projectFile;
+	private final boolean projectFile;
 	private final int hashcode; //Store hashcode of the file since the filename and path are final and cannot be changed so why calculate everytime in hashCode().
 	private final String decoratedPath;
 
@@ -89,7 +90,7 @@ public class FastOpenFile
 
 	public boolean isOpened()
 	{
-		return (jEdit.getBuffer(path) != null);
+		return (jEdit.getBuffer(path) != null && jEdit.getBuffer(path).isLoaded());
 	}
 
 	public boolean equals(Object fofile)
@@ -117,7 +118,7 @@ public class FastOpenFile
 
 	private String decorate(String name, String path)
 	{
-		return name + " (" + path + ")";
+		return "<html><body> " + name + " <i><font color=\"" + jEdit.getProperty("fastopen.path.foregroundcolor", SyntaxUtilities.getColorHexString(FastOpen.pathFGColor)) + "\">(" + path + ")</font></i></body></html>";
 	}
 }//End of class FastOpenFile
 

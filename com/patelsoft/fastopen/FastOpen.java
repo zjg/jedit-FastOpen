@@ -86,6 +86,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	public static Color nonprjopenFilesForeground = jEdit.getColorProperty(
 		"fastopen.nonprjOpenFiles.foregroundcolor", Color.green.darker());
+	
+	public static Color pathFGColor = jEdit.getColorProperty("fastopen.path.foregroundcolor", Color.LIGHT_GRAY);
 
 	private final Pattern reLineNo = Pattern.compile("(.*):([0-9]+)");
 
@@ -133,7 +135,6 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	 */
 	public void focusOnDefaultComponent()
 	{
-		
 		String txtSelection = this.searchString;
 		if (jEdit.getBooleanProperty("fastopen.patternFromSelectedText"))
 		{ 					
@@ -208,6 +209,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		setLayout(new BorderLayout());
 		txtfilename = new FastOpenTextField("fastopen.patterns", false, true);
+		txtfilename.setBackground(jEdit.getColorProperty("view.bgColor", Color.red)); //As per feedback from rgm@rgm.nu
 		txtfilename.addActionListener(this);
 		txtfilename.getDocument().addDocumentListener(new DocumentListener()
 		{
@@ -514,10 +516,27 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	}
 
-	private Buffer openFile(FastOpenFile matchingfile, int lineNo)
+	private Buffer openFile(final FastOpenFile matchingfile, final int lineNo)
 	{
-		Buffer buf = openFile(matchingfile);
-		gotoLine(lineNo);
+		org.gjt.sp.jedit.EditBus.addToBus(new org.gjt.sp.jedit.EBComponent()
+				 {
+					 public void handleMessage(org.gjt.sp.jedit.EBMessage message)
+					 {
+					 	 if(message instanceof org.gjt.sp.jedit.msg.BufferUpdate)
+					 	 {
+					 	 	 //Log.log(Log.DEBUG, this.getClass(), "Inside Buffer update");
+					 	 	 org.gjt.sp.jedit.msg.BufferUpdate bu = (org.gjt.sp.jedit.msg.BufferUpdate)message;
+					 	 	 if(bu.getWhat().equals(org.gjt.sp.jedit.msg.BufferUpdate.LOADED) && matchingfile.getPath().equalsIgnoreCase(bu.getBuffer().getPath()))
+					 	 	 {
+					 	 	 	 //Log.log(Log.DEBUG, this.getClass(), "Going to line " + lineNo);
+								 gotoLine(lineNo);
+								 org.gjt.sp.jedit.EditBus.removeFromBus(this);//Only remove from EditBus once buffer is loaded and not any other time thus this line is here and not outside the 'if' block.
+					 	 	 }
+					 	 }
+					 }
+				 }); 
+		final Buffer buf = openFile(matchingfile);
+		//gotoLine(lineNo);
 		return buf;
 	}
 
@@ -542,17 +561,19 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	private void gotoLine(final int lineNo)
 	{
-		VFSManager.runInWorkThread(new Runnable()
+		/* VFSManager.runInWorkThread(new Runnable()
 		{
 			public void run()
-			{
+			{ */
 				JEditTextArea txtArea = view.getTextArea();
 				if (lineNo <= txtArea.getLineCount())
+				{
 					txtArea.setCaretPosition(txtArea.getLineStartOffset(lineNo - 1));
+				}
 				else
-					Log.log(Log.DEBUG, this.getClass(), "Ignoring linecount " + lineNo);
-			}
-		});
+					Log.log(Log.DEBUG, this.getClass(), "Ignoring linecount " + lineNo + " Total Line count of text area "+txtArea.getLineCount());
+			/* }
+		}); */
 	}
 
 	public Buffer openFile(FastOpenFile pf)
@@ -660,6 +681,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			Pattern re = null;
 			try
 			{
+				if(jEdit.getBooleanProperty(FastOpenPlugin.FastOpenOptionPane.FASTOPEN_ALLOW_CAMELCASE_SEARCH, true) && onlyAlphaNumeric(globToFind))
+				{
+					//insert * between each character to enable Camel Case search.
+					globToFind = globToFind.replaceAll("(\\p{javaUpperCase})", "$1*"); //Since we have ensure in the if condition that the globToFind contains only Alphanumeric Characters, we can simplify the search with \p{javaUpperCase} and maintain Multilingual Uppercase search as well instead of using complex regex pattern to search for only characters to replace with * suffix which would break multi-lingual-ness.
+				}
+				
+				
 				if (jEdit.getBooleanProperty("fastopen.ignorecase"))
 					re = Pattern.compile(StandardUtilities.globToRE("^" + globToFind),Pattern.CASE_INSENSITIVE);
 				else
@@ -702,6 +730,24 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				new FastOpenFile[foundfileslist.size()]);
 		}
 		return new FastOpenFile[0];
+	}
+	
+	private boolean onlyAlphaNumeric(String str)
+	{
+		if(str != null && str.trim().length() > 0)
+		{
+			for(int i=0;i<str.length();i++)
+			{
+				if(!Character.isLetterOrDigit(str.charAt(i)))
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -923,6 +969,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	 * @created February 24, 2003
 	 */
 
+	 private static Color VERY_LIGHT_GREY = new Color(230,230,224);
+	 
 	class FastOpenRenderer extends DefaultListCellRenderer
 	{
 		public Component getListCellRendererComponent(JList list, Object value, int index,
@@ -931,6 +979,16 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			FastOpenFile file = (FastOpenFile) value;
 			setText(file.getDecoratedPath());
+			
+			if(jEdit.getBooleanProperty(FastOpenPlugin.FastOpenOptionPane.FASTOPEN_SHOW_ALTERNATE_ROWS, true))
+			{
+				if (index %2 == 0)
+				{
+					if(!isSelected)
+						setBackground(VERY_LIGHT_GREY);
+				}
+			}
+			
 			if (file.isOpened())
 			{
 				if (file.isProjectFile())

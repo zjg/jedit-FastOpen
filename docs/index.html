@@ -71,6 +71,12 @@ You can also color annotate Open files to identify or differentiate between open
 Jdk 1.6+, JEdit 5.0pre1, ProjectViewer 3.4.2(Optional) </p>
 <ol>
 <li> Offers a jEdit 5 FileOpenerService [#3481157 - Alan Ezust] </li>
+<li> FastOpen now uses the View TextArea's Background color for its Text Field's Background. Helps in case custom themes are used. [Jiger Patel]</li>
+<li> FastOpen now supports differential colours for File Names and Paths in the Search Results. The Colour to use for the path is configurable via FastOpen options. (Dont forget to do a ReIndex after changing path colors) [Jiger Patel]</li>
+<li> Alternative rows can be highlighted(zebra style) in the Search Results. Ofcourse it can be configured to be switched on/off via Options. [Jiger Patel]</li>
+<li> Support for CamelCase Search. For example simply type First Letter of Uppercase Filename to search. [Jiger Patel]</li>
+<li> Fixed Bug - FastOpen jump to line number only works on loaded buffers. (Bug #3517260) [Jiger Patel]</li>
+
 </ol>
 
 <h3 id="version2.4">Release Notes &amp; Change Log for Version : 2.4 (28 Nov 2011) </h3>
