@@ -86,7 +86,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	public static Color nonprjopenFilesForeground = jEdit.getColorProperty(
 		"fastopen.nonprjOpenFiles.foregroundcolor", Color.green.darker());
-	
+
 	public static Color pathFGColor = jEdit.getColorProperty("fastopen.path.foregroundcolor", Color.LIGHT_GRAY);
 
 	private final Pattern reLineNo = Pattern.compile("(.*):([0-9]+)");
@@ -117,10 +117,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		setupFastOpen();
 	}// End of FastOpen constructor
 
-	/** 
+	/**
 	 * Invoke FastOpen with a pre-supplied string to search for instead of possibly searching
-	 * for something under the cursor. 
-	 * 
+	 * for something under the cursor.
+	 *
 	 * @param view the view to search
 	 * @param someString something to search for
 	 */
@@ -129,7 +129,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		this(view);
 		this.searchString = someString;
 	}
-	
+
 	/**
 	 * This method gets called whenever our component gets focus.
 	 */
@@ -137,7 +137,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		String txtSelection = this.searchString;
 		if (jEdit.getBooleanProperty("fastopen.patternFromSelectedText"))
-		{ 					
+		{
 			if (txtSelection == null) txtSelection = getFileAtCaret();
 		}
 		int lineNumber = -1;
@@ -153,7 +153,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		if (txtSelection != null)
 		{
 			// Only run the Algo if the input filename does not contain newline characters.
-			if (txtSelection.indexOf("\n") == -1) 
+			if (txtSelection.indexOf("\n") == -1)
 			{
 				FastOpenFile matchingfiles[] = retrieveMatchingFiles(txtSelection);
 
@@ -176,7 +176,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				txtfilename.setText("");
 			}
 		}
-		
+
 		if (files.isPVThere())
 			loadProjectsInCombo();
 
@@ -534,13 +534,13 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 					 	 	 }
 					 	 }
 					 }
-				 }); 
+				 });
 		final Buffer buf = openFile(matchingfile);
 		//gotoLine(lineNo);
 		return buf;
 	}
 
-	/** @return the contents of the txtfilename input field, or null */
+	/** @return the contents of the txtfilename inputfield, or null */
 	private String getFilePattern()
 	{
 		try
@@ -654,8 +654,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	}
 
 	/**  Search the fastopen index for files that match a glob
-	 *   @param globToFind a filename "glob" for searching the fastopen index 
-	 *   @return an array of FastOpenFile, size 0 or more, containing matching files in the index 
+	 *   @param globToFind a filename "glob" for searching the fastopen index
+	 *   @return an array of FastOpenFile, size 0 or more, containing matching files in the index
 	 **/
 	public FastOpenFile[] retrieveMatchingFiles(String globToFind)
 	{
@@ -686,8 +686,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 					//insert * between each character to enable Camel Case search.
 					globToFind = globToFind.replaceAll("(\\p{javaUpperCase})", "$1*"); //Since we have ensure in the if condition that the globToFind contains only Alphanumeric Characters, we can simplify the search with \p{javaUpperCase} and maintain Multilingual Uppercase search as well instead of using complex regex pattern to search for only characters to replace with * suffix which would break multi-lingual-ness.
 				}
-				
-				
+
+
 				if (jEdit.getBooleanProperty("fastopen.ignorecase"))
 					re = Pattern.compile(StandardUtilities.globToRE("^" + globToFind),Pattern.CASE_INSENSITIVE);
 				else
@@ -731,7 +731,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 		}
 		return new FastOpenFile[0];
 	}
-	
+
 	private boolean onlyAlphaNumeric(String str)
 	{
 		if(str != null && str.trim().length() > 0)
@@ -743,10 +743,10 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 					return false;
 				}
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -970,7 +970,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	 */
 
 	 private static Color VERY_LIGHT_GREY = new Color(230,230,224);
-	 
+
 	class FastOpenRenderer extends DefaultListCellRenderer
 	{
 		public Component getListCellRendererComponent(JList list, Object value, int index,
@@ -979,7 +979,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			FastOpenFile file = (FastOpenFile) value;
 			setText(file.getDecoratedPath());
-			
+
 			if(jEdit.getBooleanProperty(FastOpenPlugin.FastOpenOptionPane.FASTOPEN_SHOW_ALTERNATE_ROWS, true))
 			{
 				if (index %2 == 0)
@@ -988,7 +988,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 						setBackground(VERY_LIGHT_GREY);
 				}
 			}
-			
+
 			if (file.isOpened())
 			{
 				if (file.isProjectFile())
