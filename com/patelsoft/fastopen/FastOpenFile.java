@@ -90,7 +90,7 @@ public class FastOpenFile
 
 	public boolean isOpened()
 	{
-		return (jEdit.getBuffer(path) != null && jEdit.getBuffer(path).isLoaded());
+		return (jEdit.getBuffer(path) != null &&  jEdit.getBuffer(path).isLoaded());
 	}
 
 	public boolean equals(Object fofile)

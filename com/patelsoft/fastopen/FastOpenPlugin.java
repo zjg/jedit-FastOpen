@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 public class FastOpenPlugin extends EditPlugin
 {
 	public static final String NAME = "fastopen";
-	static Hashtable<Window, FastOpen> viewsToFastOpen = new Hashtable<Window, FastOpen>(5);
+	static Hashtable<Window, FastOpen>  viewsToFastOpen = new Hashtable<Window, FastOpen>(5);
 
 	public static final String OPEN_FILES_FIRST = "OPEN_FILES_FIRST";
 	public static final String OPEN_FILES_LAST ="OPEN_FILES_LAST";
@@ -212,7 +212,7 @@ public class FastOpenPlugin extends EditPlugin
 			btnNonPrjFilesColor = new ColorWellButton(FastOpen.nonprjopenFilesForeground);
 			panelColors.add(new JLabel("Non-Project files Foreground :"));
 			panelColors.add(btnNonPrjFilesColor);
-			
+
 			btnPathFGColor = new ColorWellButton(FastOpen.pathFGColor);
 			panelColors.add(new JLabel("Path Foreground :"));
 			panelColors.add(btnPathFGColor);
@@ -230,14 +230,14 @@ public class FastOpenPlugin extends EditPlugin
 			// Set initial component values
 			chkSort.setSelected(jEdit.getBooleanProperty(FASTOPEN_SORT_FILES));
 			chkShowAlternateRows.setSelected(jEdit.getBooleanProperty(FASTOPEN_SHOW_ALTERNATE_ROWS, true));
-			
+
 			enableDisableChildren(radioOpenFilesFirst.getParent(), jEdit.getBooleanProperty(FASTOPEN_SORT_FILES));
 			chkDontShowOpenFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_HIDE_OPEN_FILES));
 			chkIgnoreCase.setSelected(jEdit.getBooleanProperty(FASTOPEN_IGNORE_CASE, true));
 			chkPattFromSelectedText.setSelected(jEdit.getBooleanProperty(FASTOPEN_PATTERN_FROM_SELECTED_TEXT));
 			chkShowRecentFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_SHOW_RECENT_FILES, true));
 			chkAllowCamelCase.setSelected(jEdit.getBooleanProperty(FASTOPEN_ALLOW_CAMELCASE_SEARCH, true));
-			
+
 			Enumeration<AbstractButton> enumElements =bg.getElements();
 			while(enumElements.hasMoreElements())
 			{
