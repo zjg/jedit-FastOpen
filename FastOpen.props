@@ -9,7 +9,8 @@ plugin.com.patelsoft.fastopen.FastOpenPlugin.longdescription=description.html
 
 #external depencies
 plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.0=jdk 1.6
-plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.1=jedit 05.00.01.00
+# Has a build-depend on 5.0pre1, but it should run fine against jedit 4.5.x
+plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.1=jedit 04.05.99.00
 plugin.com.patelsoft.fastopen.FastOpenPlugin.depend.2=optional plugin projectviewer.ProjectPlugin 3.4.2
 
 plugin.com.patelsoft.fastopen.FastOpenPlugin.activate=defer
