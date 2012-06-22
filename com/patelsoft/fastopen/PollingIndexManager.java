@@ -50,10 +50,10 @@ public class PollingIndexManager extends AbstractIndexManager implements Runnabl
 	{
 		if(collecting) //Check if somebody is running this method already
 		{
-			System.out.println("Currently collecting. ReIndex request ignored.");
+			Log.log(Log.MESSAGE, this, "Currently collecting. ReIndex request ignored.");
 			return;
 		}
-        long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 		collecting = true;
 		queryFilesFromSource();
 		long end = System.currentTimeMillis();
@@ -73,7 +73,6 @@ public class PollingIndexManager extends AbstractIndexManager implements Runnabl
 
 	public void suggestReindex()
 	{
-        System.out.println("----------------------Re-Index suggested----------------Re-Indexing");
 		allfiles.clear();
 		collectFiles();
 	}

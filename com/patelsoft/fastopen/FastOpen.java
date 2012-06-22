@@ -160,9 +160,7 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 				if (matchingfiles != null && matchingfiles.length == 1)
 				{
 					/* Only one matching file so don't show the mainWindow */
-					openFile((FastOpenFile) matchingfiles[0]);
-					if (lineNumber != -1)
-						gotoLine(lineNumber);
+					openFile((FastOpenFile) matchingfiles[0], lineNumber);
 					closeMainWindow();
 					return;
 				}
@@ -518,25 +516,27 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 
 	private Buffer openFile(final FastOpenFile matchingfile, final int lineNo)
 	{
-		org.gjt.sp.jedit.EditBus.addToBus(new org.gjt.sp.jedit.EBComponent()
-				 {
-					 public void handleMessage(org.gjt.sp.jedit.EBMessage message)
+		if(lineNo != -1) //Happens in case of no line number is passed.
+		{
+			org.gjt.sp.jedit.EditBus.addToBus(new org.gjt.sp.jedit.EBComponent()
 					 {
-					 	 if(message instanceof org.gjt.sp.jedit.msg.BufferUpdate)
-					 	 {
-					 	 	 //Log.log(Log.DEBUG, this.getClass(), "Inside Buffer update");
-					 	 	 org.gjt.sp.jedit.msg.BufferUpdate bu = (org.gjt.sp.jedit.msg.BufferUpdate)message;
-					 	 	 if(bu.getWhat().equals(org.gjt.sp.jedit.msg.BufferUpdate.LOADED) && matchingfile.getPath().equalsIgnoreCase(bu.getBuffer().getPath()))
-					 	 	 {
-					 	 	 	 //Log.log(Log.DEBUG, this.getClass(), "Going to line " + lineNo);
-								 gotoLine(lineNo);
-								 org.gjt.sp.jedit.EditBus.removeFromBus(this);//Only remove from EditBus once buffer is loaded and not any other time thus this line is here and not outside the 'if' block.
-					 	 	 }
-					 	 }
-					 }
-				 });
+						 public void handleMessage(org.gjt.sp.jedit.EBMessage message)
+						 {
+							 if(message instanceof org.gjt.sp.jedit.msg.BufferUpdate)
+							 {
+								 //Log.log(Log.DEBUG, this.getClass(), "Inside Buffer update");
+								 org.gjt.sp.jedit.msg.BufferUpdate bu = (org.gjt.sp.jedit.msg.BufferUpdate)message;
+								 if(bu.getWhat().equals(org.gjt.sp.jedit.msg.BufferUpdate.LOADED) && matchingfile.getPath().equalsIgnoreCase(bu.getBuffer().getPath()))
+								 {
+									 //Log.log(Log.DEBUG, this.getClass(), "Going to line " + lineNo);
+									 gotoLine(lineNo);
+									 org.gjt.sp.jedit.EditBus.removeFromBus(this);//Only remove from EditBus once buffer is loaded and not any other time thus this line is here and not outside the 'if' block.
+								 }
+							 }
+						 }
+					 });
+		}
 		final Buffer buf = openFile(matchingfile);
-		//gotoLine(lineNo);
 		return buf;
 	}
 
