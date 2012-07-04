@@ -112,7 +112,8 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 	{
 		super();
 		this.view = view;
-		noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
+		//noWordSep = view.getBuffer().getProperty("noWordSep") + ".:-" + File.separator;
+		noWordSep = view.getBuffer().getProperty("noWordSep") + File.separator; //Use jEdit's "Extra Word Char" settings for identifying words which can represent a file to open. 
 		indexManager = getIndexManager();
 		setupFastOpen();
 	}// End of FastOpen constructor

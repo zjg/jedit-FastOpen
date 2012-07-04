@@ -76,6 +76,7 @@ Jdk 1.6+, jEdit 4.5 (runtime)/jEdit 5.0pre1 (for building), ProjectViewer 3.4.2(
 <li> Alternative rows can be highlighted(zebra style) in the Search Results. Ofcourse it can be configured to be switched on/off via Options. [Jiger Patel]</li>
 <li> Support for CamelCase Search. For example simply type First Letter of Uppercase Filename to search. [Jiger Patel]</li>
 <li> Fixed Bug -  FastOpen jump to line number only works on loaded buffers. (Bug #3517260) [Jiger Patel]</li>
+<li> FastOpen now uses jEdit's "Extra Word Characters" settings to identify words which can be used in opening Files smartly. For instance previously having cursor on Fast|Open.showWindow would show "FastOpen.showWindow" in searchbox(which would not yield any results) whereas the user might have intended to open a File "FastOpen" and thus had cursor on its name. Now this will work as intended. Great esp when opening Files with static variable references. [Jiger Patel]</li>
 
 </ol>
 
