@@ -49,6 +49,9 @@ public abstract class AbstractIndexManager implements IndexManager
 		if(jEdit.getBooleanProperty("fastopen.showrecentfiles"))
 			files.getRecentFiles(tmp_set);
 
+		if(jEdit.getBooleanProperty("fastopen.showAllOpenFiles"))
+		   files.getAllOpenFiles(tmp_set);
+ 
 		allfiles = tmp_set;
 		notifyListeners(INDEXING_COMPLETED);
 	}

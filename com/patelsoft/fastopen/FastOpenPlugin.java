@@ -92,9 +92,12 @@ public class FastOpenPlugin extends EditPlugin
 		private static final String FASTOPEN_IGNORE_CASE = "fastopen.ignorecase";
 		private static final String FASTOPEN_HIDE_OPEN_FILES = "fastopen.hideOpenFiles";
 		private static final String FASTOPEN_SORT_FILES = "fastopen.sortFiles";
+		private static final String FASTOPEN_MATCH_ANYWHERE = "fastopen.matchAnywhere";
+		private static final String FASTOPEN_SHOW_ALL_OPEN_FILES = "fastopen.showAllOpenFiles";
 		static final String FASTOPEN_SHOW_ALTERNATE_ROWS = "fastopen.showalternaterows";
 		static final String FASTOPEN_ALLOW_CAMELCASE_SEARCH = "fastopen.allowcamelcase.search";
 		JCheckBox chkSort,chkDontShowOpenFiles,chkIgnoreCase,chkPattFromSelectedText, chkShowRecentFiles, chkShowAlternateRows, chkAllowCamelCase;
+		JCheckBox chkMatchAnywhere, chkShowAllOpenFiles;
 		JRadioButton radioOpenFilesFirst,radioOpenFilesLast,radioNoPref;
 		ButtonGroup bg = new ButtonGroup();
 		ColorWellButton btnOpenFilesColor, btnNonPrjFilesColor, btnPathFGColor;
@@ -116,6 +119,8 @@ public class FastOpenPlugin extends EditPlugin
 			chkPattFromSelectedText = new JCheckBox("Pattern from Selected text",true);
 			chkShowRecentFiles = new JCheckBox("Search Recent Files",true);
 			chkAllowCamelCase = new JCheckBox("Allow Camel Case Search",true);
+			chkMatchAnywhere = new JCheckBox("Match anywhere in filename", false);
+			chkShowAllOpenFiles = new JCheckBox("Search all Open files", false);
 
 			radioOpenFilesFirst = new JRadioButton("Show open files First");
 			radioOpenFilesLast = new JRadioButton("Show open files Last");
@@ -175,12 +180,14 @@ public class FastOpenPlugin extends EditPlugin
 
 
 			panelChk.add(chkDontShowOpenFiles);
+			panelChk.add(chkShowAllOpenFiles);
 			panelChk.add(chkIgnoreCase);
 			panelChk.add(chkPattFromSelectedText);
 			panelChk.add(chkShowRecentFiles);
 			panelChk.add(chkSort);
 			panelChk.add(chkShowAlternateRows);
 			panelChk.add(chkAllowCamelCase);
+			panelChk.add(chkMatchAnywhere);
 			panel.add(panelChk);
 
 			chkSort.addItemListener(new ItemListener()
@@ -238,6 +245,9 @@ public class FastOpenPlugin extends EditPlugin
 			chkShowRecentFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_SHOW_RECENT_FILES, true));
 			chkAllowCamelCase.setSelected(jEdit.getBooleanProperty(FASTOPEN_ALLOW_CAMELCASE_SEARCH, true));
 
+			chkMatchAnywhere.setSelected(jEdit.getBooleanProperty(FASTOPEN_MATCH_ANYWHERE, false));
+			chkShowAllOpenFiles.setSelected(jEdit.getBooleanProperty(FASTOPEN_SHOW_ALL_OPEN_FILES, false));
+
 			Enumeration<AbstractButton> enumElements =bg.getElements();
 			while(enumElements.hasMoreElements())
 			{
@@ -264,6 +274,9 @@ public class FastOpenPlugin extends EditPlugin
 			jEdit.setColorProperty(FASTOPEN_PATH_FG_COLOR,btnPathFGColor.getSelectedColor());
 			jEdit.setIntegerProperty(FASTOPEN_INDEXING_FREQ,indexingFreq.getValue());
 			jEdit.setBooleanProperty(FASTOPEN_ALLOW_CAMELCASE_SEARCH,chkAllowCamelCase.isSelected());
+
+			jEdit.setBooleanProperty(FASTOPEN_MATCH_ANYWHERE,chkMatchAnywhere.isSelected());
+			jEdit.setBooleanProperty(FASTOPEN_SHOW_ALL_OPEN_FILES,chkShowAllOpenFiles.isSelected());
 
 			double delay = 2.0;
 			if(txtdelay.getValue() instanceof Double)

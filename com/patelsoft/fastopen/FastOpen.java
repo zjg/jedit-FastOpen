@@ -682,17 +682,21 @@ public class FastOpen extends JPanel implements ActionListener, IndexListener, D
 			Pattern re = null;
 			try
 			{
+			   String prefix = "^";
+			   if (jEdit.getBooleanProperty("fastopen.matchAnywhere"))
+			      prefix = "";
+
 				if(jEdit.getBooleanProperty(FastOpenPlugin.FastOpenOptionPane.FASTOPEN_ALLOW_CAMELCASE_SEARCH, true) && onlyAlphaNumeric(globToFind))
 				{
 					//insert * between each character to enable Camel Case search.
 					globToFind = globToFind.replaceAll("(\\p{javaUpperCase})", "$1*"); //Since we have ensure in the if condition that the globToFind contains only Alphanumeric Characters, we can simplify the search with \p{javaUpperCase} and maintain Multilingual Uppercase search as well instead of using complex regex pattern to search for only characters to replace with * suffix which would break multi-lingual-ness.
 				}
 
-
+				String reString = prefix + globToFind;
 				if (jEdit.getBooleanProperty("fastopen.ignorecase"))
-					re = Pattern.compile(StandardUtilities.globToRE("^" + globToFind),Pattern.CASE_INSENSITIVE);
+					re = Pattern.compile(StandardUtilities.globToRE(reString),Pattern.CASE_INSENSITIVE);
 				else
-					re = Pattern.compile(StandardUtilities.globToRE("^" + globToFind));
+					re = Pattern.compile(StandardUtilities.globToRE(reString));
 			}
 			catch(java.util.regex.PatternSyntaxException e)
 			{

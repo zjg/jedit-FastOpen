@@ -33,3 +33,5 @@ fastopen.showrecentfiles=true
 fastopen.indexing.freq=10
 fastopen.indexing.strategy=polling
 fastopen.search.delay=2
+fastopen.matchAnywhere=false
+fastopen.showAllOpenFiles=false

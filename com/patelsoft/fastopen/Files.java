@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.gjt.sp.jedit.jEdit;
 import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.BufferHistory;
 import org.gjt.sp.jedit.BufferHistory.Entry;
@@ -182,10 +183,38 @@ public class Files
 			}
 		}
 	}
+	
+	public void buffer2FastOpenFile(Buffer[] buffers, Collection<FastOpenFile> allFiles)
+	{
+	   for(int i = 0; i < buffers.length; ++i)
+	   {
+	      boolean exists = false;
+			Iterator<FastOpenFile> iterAllFiles = allFiles.iterator();
+			while(iterAllFiles.hasNext())
+			{
+				FastOpenFile fofile = (FastOpenFile)iterAllFiles.next();
+				if(fofile.equals(buffers[i]))
+				{
+					exists = true;
+					break;
+				}
+			}
+
+			if(!exists)
+			{
+				FastOpenFile fofile = new FastOpenFile(buffers[i]);
+				allFiles.add(fofile);
+			}
+	   }
+	}
 
 	void getRecentFiles(Collection<FastOpenFile> allFiles)
 	{
 		bufferEntry2FastOpenFile(BufferHistory.getHistory(), allFiles);
 	}
 
+	void getAllOpenFiles(Collection<FastOpenFile> allFiles)
+	{
+		buffer2FastOpenFile(jEdit.getBuffers(), allFiles);
+	}
 }
